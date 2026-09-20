@@ -1,0 +1,153 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model AdminUser {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  password  String
+  role      String   @default("ADMIN")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model BlogCategory {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  slug      String   @unique
+  blogs     Blog[]
+  createdAt DateTime @default(now())
+}
+
+model Blog {
+  id            String        @id @default(cuid())
+  title         String
+  slug          String        @unique
+  description   String?
+  content       String
+  featuredImage String?
+  keywords      String?
+  categoryId    String
+  category      BlogCategory  @relation(fields: [categoryId], references: [id])
+  isPublished   Boolean       @default(false)
+  publishedAt   DateTime      @default(now())
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+model Career {
+  id             String           @id @default(cuid())
+  title          String
+  slug           String           @unique
+  department     String
+  location       String?
+  employmentType String
+  workType       String
+  salary         String?
+  description    String
+  requirements   String
+  isActive       Boolean          @default(true)
+  closingDate    DateTime?
+  applications   JobApplication[]
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+}
+
+model JobApplication {
+  id              String   @id @default(cuid())
+  careerId        String
+  careerSlug      String
+  career          Career   @relation(fields: [careerId], references: [id], onDelete: Cascade)
+  firstName       String
+  lastName        String
+  email           String
+  phoneNumber     String
+  linkedin        String?
+  resumeUrl       String
+  personalSummary String?
+  status          String   @default("PENDING")
+  createdAt       DateTime @default(now())
+}
+
+model ContactInquiry {
+  id        String   @id @default(cuid())
+  firstName String
+  lastName  String
+  email     String
+  country   String?
+  subject   String
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model Staff {
+  id           String   @id @default(cuid())
+  firstName    String
+  lastName     String
+  position     String
+  category     String   // LEADERSHIP, OPERATING_COMMITTEE, BOARD
+  bio          String?
+  profileImage String?
+  orderIndex   Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Partner {
+  id          String   @id @default(cuid())
+  name        String
+  logoUrl     String
+  website     String?
+  category    String   // TECHNICAL, OPERATIONAL, REGULATORY
+  orderIndex  Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Press {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  summary     String?
+  content     String
+  fileUrl     String?
+  publishedAt DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Event {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  location    String
+  startDate   DateTime
+  endDate     DateTime?
+  description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model NewsletterSubscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+}
+
+model WebsiteInfo {
+  id           String   @id @default("tulcan-config")
+  title        String?
+  description  String?
+  contactEmail String?
+  contactPhone String?
+  addresses    String?
+  ogImages     String?
+  updatedAt    DateTime @updatedAt
+}
