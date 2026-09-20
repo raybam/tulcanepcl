@@ -71,7 +71,10 @@ const slides: Slide[] = [
     primaryCtaHref: "/about/leadership",
     secondaryCtaText: "Partners & Vendors",
     secondaryCtaHref: "/partners",
-    backgroundImage: getCloudinaryUrl("tulcan_energy/hero-4", "/images/hero-4.jpg"),
+    backgroundImage: getCloudinaryUrl(
+      "https://res.cloudinary.com/xh7slab6/image/upload/v1789934090/tulcan_energy/hero-4.jpg",
+      "/images/hero-4.jpg"
+    ),
     telemetryLeft: "100% INDIGENOUS MASTERY",
     telemetryRight: "PIA & ESG COMPLIANT",
   },

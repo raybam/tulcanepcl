@@ -69,7 +69,7 @@ export const SECTION_ASSETS = {
     fallback: "/images/hero-3.jpg",
   },
   heroSlide4: {
-    publicId: "tulcan_energy/hero-4",
+    publicId: "https://res.cloudinary.com/xh7slab6/image/upload/v1789934090/tulcan_energy/hero-4.jpg",
     fallback: "/images/hero-4.jpg",
   },
   headerCorporate: {

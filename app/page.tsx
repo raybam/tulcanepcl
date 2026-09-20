@@ -85,7 +85,7 @@ export default function HomePage() {
           setLoadingLeaders(false);
         }
       }
-    } catch (_) {}
+    } catch (_) { }
 
     // Dynamic fetch for leadership and news
     const fetchHomeData = async () => {
@@ -118,7 +118,7 @@ export default function HomePage() {
 
               try {
                 sessionStorage.setItem("tulcan_home_leaders_cache", JSON.stringify(mapped));
-              } catch (_) {}
+              } catch (_) { }
             } else {
               setLeaders(DEFAULT_LEADERS);
             }
@@ -327,7 +327,7 @@ export default function HomePage() {
       </section>
 
       {/* 4. Leadership Preview */}
-      <section className="py-section-v-desktop bg-pure-white text-pure-black border-b border-black/5">
+      <section className="pt-section-v-desktop pb-14 bg-pure-white text-pure-black border-b border-black/5">
         <div className="px-container-margin">
           <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
             <div>
@@ -385,7 +385,7 @@ export default function HomePage() {
       </section>
 
       {/* 5. Latest News */}
-      <section className="py-section-v-desktop bg-pure-white text-pure-black border-b border-black/5">
+      <section className="pt-14 pb-section-v-desktop bg-pure-white text-pure-black border-b border-black/5">
         <div className="px-container-margin">
           <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
             <div>
