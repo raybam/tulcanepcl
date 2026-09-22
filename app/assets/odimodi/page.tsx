@@ -132,7 +132,7 @@ export default function OdimodiPage() {
               </div>
               <div className="p-8 bg-neutral-50/80 border border-black/10">
                 <p className="font-body-md text-surface-variant mb-6 leading-relaxed text-sm">
-                  Our primary objective is to fast-track the monetization of discovered gas and condensate reserves. This involves a phased development approach, prioritizing early production while conducting step-out delineation drilling to define ultimate EUR.
+                  Our primary objective is to fast-track the development of discovered hydrocarbon and condensate reserves. This involves a phased development approach, prioritizing early production while conducting step-out delineation drilling to define ultimate EUR.
                 </p>
                 <ul className="space-y-4 font-label-technical text-xs text-pure-black">
                   <li className="flex items-center space-x-3">
@@ -145,7 +145,7 @@ export default function OdimodiPage() {
                   </li>
                   <li className="flex items-center space-x-3">
                     <span className="w-2 h-2 bg-primary-container rounded-full block"></span>
-                    <span>Gas Monetization & Domestic Gas Supply Obligation (DGSO) compliance</span>
+                    <span>Phase 3: Production Optimization & Regulatory Compliance</span>
                   </li>
                 </ul>
               </div>

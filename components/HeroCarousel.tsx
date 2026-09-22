@@ -50,9 +50,9 @@ const slides: Slide[] = [
   {
     id: 3,
     badge: "Onshore & Swamp Asset · PPL 227",
-    title: "Odimodi Asset &\nGas Commercialization.",
+    title: "Odimodi Asset &\nUpstream Development.",
     description:
-      "Unlocking coastal condensate and associated gas through modular early production facilities tied into established Niger Delta export trunklines.",
+      "Unlocking coastal and swamp hydrocarbon potential through modular early production facilities tied into established Niger Delta export trunklines.",
     primaryCtaText: "Explore Odimodi",
     primaryCtaHref: "/assets/odimodi",
     secondaryCtaText: "HSE Framework",

@@ -62,16 +62,16 @@ const DEFAULT_ARTICLES: Article[] = [
   {
     id: "news-04",
     slug: "strategic-commercial-alliances-upstream",
-    title: "Tulcan Energy Consolidates Strategic Joint Venture for Gas Commercialization",
+    title: "Tulcan Energy Consolidates Strategic Joint Venture for Upstream Field Development",
     category: "CORPORATE",
     date: "JUL 12, 2024",
     loc: "LOC: ABUJA_HQ",
     image:
       "https://lh3.googleusercontent.com/aida-public/AB6AXuCTBoIV7LaCYHoGeRfJAWBPiEN90qZXxFvXeArwzmbmLl7SPjgYE363BTSooY7VrGufuIitMgANWYgkyulyE2R6AfEh_tRAZqEqrAJr7fDB3NsNqT9MEyDrOzTceZRzzpMFGLqvMguXumVyK6JVcuTyX2x2Ss4KKHds-ytVMMiG-nXbgfFo2yQykMWx-btFGNp40p24j-flSfw21Iy79gyvkDvxBQ6iLYyEckUz9Nbp1hYST9HmJwjh",
     summary:
-      "Advancing Nigeria's Decade of Gas agenda through commercial gas off-take frameworks for regional power plants and domestic industrial clusters.",
+      "Strengthening operational alliances and infrastructure integration to accelerate production across key Niger Delta asset corridors.",
     content:
-      "Tulcan Energy has finalized heads of terms for long-term domestic gas sales and purchase agreements (GSPA). The gas supplied from our Odimodi and offshore marginal concessions will directly fuel critical industrial manufacturing zones, replacing heavy fuel oils with cleaner-burning Nigerian natural gas.",
+      "Tulcan Energy has finalized strategic joint venture agreements to accelerate field development, appraisal engineering, and facility integration across our operated assets. This milestone reinforces our commitment to maximizing domestic hydrocarbon recovery and operational excellence.",
   },
 ];
 
