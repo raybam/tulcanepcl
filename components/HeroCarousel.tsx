@@ -100,7 +100,7 @@ export default function HeroCarousel() {
 
   return (
     <header
-      className="relative w-full h-screen min-h-[780px] flex items-end pb-section-v-tablet pt-24 overflow-hidden select-none"
+      className="relative w-full min-h-screen lg:h-screen flex items-center pt-28 pb-10 overflow-hidden select-none"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
@@ -129,8 +129,8 @@ export default function HeroCarousel() {
       })}
 
       {/* Foreground Content */}
-      <div className="relative z-10 w-full px-4 sm:px-8 xl:px-container-margin grid grid-cols-12 gap-grid-gutter">
-        <div className="col-span-12 md:col-span-10 lg:col-span-8 flex flex-col gap-5">
+      <div className="relative z-10 w-full px-4 sm:px-8 xl:px-container-margin grid grid-cols-12 gap-grid-gutter my-auto">
+        <div className="col-span-12 md:col-span-10 lg:col-span-8 flex flex-col gap-4 sm:gap-5">
           {/* Badge */}
           <div className="flex items-center gap-3 font-label-technical text-xs text-primary uppercase tracking-widest">
             <span className="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
@@ -138,17 +138,17 @@ export default function HeroCarousel() {
           </div>
 
           {/* Headline */}
-          <h1 className="font-headline-lg-mobile md:font-headline-lg text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-pure-white max-w-4xl leading-[1.08] font-extrabold tracking-tight whitespace-pre-line animate-fadeIn">
+          <h1 className="font-headline-lg-mobile md:font-headline-lg text-3xl sm:text-5xl md:text-6xl lg:text-7xl text-pure-white max-w-4xl leading-[1.08] font-extrabold tracking-tight whitespace-pre-line animate-fadeIn">
             {slides[current].title}
           </h1>
 
           {/* Description */}
-          <p className="font-body-lg text-sm sm:text-base md:text-lg text-on-surface-variant max-w-2xl mt-1 leading-relaxed">
+          <p className="font-body-lg text-sm sm:text-base md:text-lg text-on-surface-variant max-w-2xl mt-0.5 leading-relaxed">
             {slides[current].description}
           </p>
 
           {/* Action CTAs */}
-          <div className="mt-6 flex flex-wrap gap-4 items-center">
+          <div className="mt-4 sm:mt-6 flex flex-wrap gap-4 items-center">
             <Link
               href={slides[current].primaryCtaHref}
               className="bg-primary-container text-pure-white font-label-technical text-xs sm:text-sm px-7 py-3.5 border border-primary-container hover:scale-[1.02] hover:brightness-110 transition-all duration-200 uppercase tracking-wider shadow-lg"
@@ -164,7 +164,7 @@ export default function HeroCarousel() {
           </div>
 
           {/* Slide Technical Telemetry Stamp */}
-          <div className="mt-4 flex items-center gap-6 text-[11px] font-label-technical text-neutral-400 uppercase tracking-widest pt-4 border-t border-white/10 max-w-xl">
+          <div className="mt-3 sm:mt-4 flex items-center gap-6 text-[11px] font-label-technical text-neutral-400 uppercase tracking-widest pt-3 sm:pt-4 border-t border-white/10 max-w-xl">
             <span>{slides[current].telemetryLeft}</span>
             <span className="text-primary">•</span>
             <span>{slides[current].telemetryRight}</span>

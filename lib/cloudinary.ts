@@ -61,7 +61,7 @@ export const SECTION_ASSETS = {
     fallback: "/images/hero-1.jpg",
   },
   heroSlide2: {
-    publicId: "tulcan_energy/hero-2",
+    publicId: "https://res.cloudinary.com/xh7slab6/image/upload/v1790288154/3d-rendering-arrow-hitting-target.jpg",
     fallback: "/images/hero-2.jpg",
   },
   heroSlide3: {
@@ -73,7 +73,7 @@ export const SECTION_ASSETS = {
     fallback: "/images/hero-4.jpg",
   },
   headerCorporate: {
-    publicId: "tulcan_energy/header-corporate",
+    publicId: "https://res.cloudinary.com/xh7slab6/image/upload/v1790288154/retinal-biometrics-technology-with-man-s-eye-digital-remix.jpg",
     fallback: "/images/header-corporate.jpg",
   },
   headerHse: {

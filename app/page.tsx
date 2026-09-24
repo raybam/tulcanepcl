@@ -6,7 +6,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import HeroCarousel from "@/components/HeroCarousel";
 import { buildApiUrl } from "@/lib/api-config";
-import { getCloudinaryUrl } from "@/lib/cloudinary";
+import { getCloudinaryUrl, SECTION_ASSETS } from "@/lib/cloudinary";
 
 interface HomeLeader {
   name: string;
@@ -20,6 +20,74 @@ interface HomeArticle {
   summary: string;
   image: string;
 }
+
+interface HomePartner {
+  id?: string;
+  name?: string;
+  logoUrl: string;
+  website?: string;
+  category?: string;
+  orderIndex?: number;
+}
+
+const DEFAULT_PARTNERS: HomePartner[] = [
+  {
+    id: "partner-1",
+    name: "Brightwaters Energy",
+    logoUrl: "https://res.cloudinary.com/xh7slab6/image/upload/v1790289700/brightwaters.png",
+    category: "Technical Partner",
+    orderIndex: 1,
+  },
+  {
+    id: "partner-2",
+    name: "POAA Adit",
+    logoUrl: "https://res.cloudinary.com/xh7slab6/image/upload/v1790289303/poaadit_logo.png",
+    category: "Technical Partner",
+    orderIndex: 2,
+  },
+  {
+    id: "partner-3",
+    name: "Shelf Drilling",
+    logoUrl: "https://res.cloudinary.com/xh7slab6/image/upload/v1790289302/shelf_drilling.jpg",
+    category: "Technical Partner",
+    orderIndex: 3,
+  },
+  {
+    id: "partner-4",
+    name: "Spectrum Diagnostics",
+    logoUrl: "https://res.cloudinary.com/xh7slab6/image/upload/v1790289302/spectrum.jpg",
+    category: "Technical Partner",
+    orderIndex: 4,
+  },
+  {
+    id: "partner-5",
+    name: "Parker Hannifin",
+    logoUrl: "https://res.cloudinary.com/xh7slab6/image/upload/v1790289302/panel_parker.png",
+    category: "Technical Partner",
+    orderIndex: 5,
+  },
+  {
+    id: "partner-6",
+    name: "Halliburton",
+    logoUrl: "https://res.cloudinary.com/xh7slab6/image/upload/v1790289302/Halliburton.png",
+    category: "Technical Partner",
+    orderIndex: 6,
+  },
+  {
+    id: "partner-7",
+    name: "SLB (Schlumberger)",
+    logoUrl: "https://res.cloudinary.com/xh7slab6/image/upload/v1790289302/slb.png",
+    category: "Technical Partner",
+    orderIndex: 7,
+  },
+  {
+    id: "partner-8",
+    name: "Baker Hughes",
+    logoUrl: "https://res.cloudinary.com/xh7slab6/image/upload/v1790289302/Baker-Hughes-Logo-Symbol-PNG.png",
+    category: "Technical Partner",
+    orderIndex: 8,
+  },
+];
 
 const DEFAULT_LEADERS: HomeLeader[] = [
   {
@@ -73,6 +141,7 @@ export default function HomePage() {
   const [leaders, setLeaders] = useState<HomeLeader[]>([]);
   const [loadingLeaders, setLoadingLeaders] = useState(true);
   const [newsArticles, setNewsArticles] = useState<HomeArticle[]>(DEFAULT_ARTICLES);
+  const [partners, setPartners] = useState<HomePartner[]>(DEFAULT_PARTNERS);
 
   useEffect(() => {
     // Instantaneous hydration from sessionStorage on page load/refresh
@@ -87,12 +156,13 @@ export default function HomePage() {
       }
     } catch (_) { }
 
-    // Dynamic fetch for leadership and news
+    // Dynamic fetch for leadership, news, and technical partners
     const fetchHomeData = async () => {
       try {
-        const [teamsRes, blogsRes] = await Promise.all([
+        const [teamsRes, blogsRes, partnersRes] = await Promise.all([
           fetch(buildApiUrl("/api/admin/teams")),
           fetch(buildApiUrl("/api/admin/blogs")),
+          fetch(buildApiUrl("/api/admin/partners")),
         ]);
 
         if (teamsRes.ok) {
@@ -141,6 +211,13 @@ export default function HomePage() {
             setNewsArticles(mapped);
           }
         }
+
+        if (partnersRes.ok) {
+          const pData = await partnersRes.json();
+          if (pData.partners && Array.isArray(pData.partners) && pData.partners.length > 0) {
+            setPartners(pData.partners);
+          }
+        }
       } catch (err) {
         console.error("Failed to load dynamic home data:", err);
         setLeaders((prev) => (prev.length > 0 ? prev : DEFAULT_LEADERS));
@@ -159,76 +236,159 @@ export default function HomePage() {
       {/* 1. Cinematic Hero Carousel Slider */}
       <HeroCarousel />
 
-      {/* 2. Vision, Mission & Values */}
-      <section className="py-section-v-desktop bg-pure-white text-pure-black border-b border-black/5">
-        <div className="px-container-margin grid grid-cols-12 gap-grid-gutter">
-          <div className="col-span-12 lg:col-span-10 lg:col-start-2">
-            <div className="mb-14">
-              <span className="font-label-technical text-label-technical text-primary-container uppercase tracking-widest block mb-3 font-bold text-xs">
+      {/* 2. Introduction to Tulcan EPCL */}
+      <section className="py-24 sm:py-28 bg-pure-white text-center border-b border-black/5">
+        <div className="px-container-margin max-w-5xl mx-auto">
+          <h2 className="font-headline-lg text-2xl sm:text-3xl md:text-4xl lg:text-[36px] lg:leading-[1.25] font-extrabold text-primary-container max-w-4xl mx-auto tracking-tight mb-8">
+            At Tulcan Energy EPCL, we leverage innovation, cutting-edge technology, and subsurface expertise to redefine excellence in the upstream energy sector.
+          </h2>
+          <p className="font-body-lg text-sm sm:text-base md:text-[17px] md:leading-[1.8] text-neutral-600 max-w-3xl mx-auto font-normal">
+            With a proven track record in upstream exploration, appraisal, and field development across our operated concessions, we deliver integrated, value-driven operations tailored to maximize hydrocarbon recovery. Our unwavering commitment to sustainability, HSE excellence, and community partnership ensures we create exceptional value while driving regional energy progress.
+          </p>
+        </div>
+      </section>
+
+      {/* 3. Vision, Mission & Values */}
+      <section className="py-20 md:py-24 bg-neutral-50/60 text-pure-black border-b border-black/5">
+        <div className="px-container-margin max-w-7xl mx-auto space-y-20">
+
+          {/* Row 1: Our Vision (Image LEFT, Text RIGHT) */}
+          <div className="grid grid-cols-12 gap-8 lg:gap-12 items-center">
+            {/* Image LEFT */}
+            <div className="col-span-12 lg:col-span-6 order-2 lg:order-1">
+              <div className="relative aspect-[16/10] sm:aspect-[4/3] bg-neutral-900 overflow-hidden border border-black/10 shadow-lg group">
+                <div
+                  className="w-full h-full bg-cover bg-center grayscale contrast-110 group-hover:scale-105 group-hover:grayscale-0 transition-all duration-700"
+                  style={{
+                    backgroundImage: `url('${getCloudinaryUrl(SECTION_ASSETS.headerCorporate.publicId, SECTION_ASSETS.headerCorporate.fallback)}')`,
+                  }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-pure-black/70 via-transparent to-transparent"></div>
+                <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between font-label-technical text-[11px] text-pure-white/90">
+                  <span className="uppercase tracking-widest bg-pure-black/60 backdrop-blur-md px-3 py-1 border border-white/10">
+                    STRATEGIC HORIZON
+                  </span>
+                  <span className="tracking-wider">TECHNICAL INNOVATION</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Text RIGHT */}
+            <div className="col-span-12 lg:col-span-6 order-1 lg:order-2 flex flex-col justify-center pl-0 lg:pl-4">
+              <span className="font-label-technical text-xs text-primary-container uppercase tracking-widest block mb-3 font-bold flex items-center gap-2">
+                <span className="material-symbols-outlined text-sm">visibility</span>
                 Our Vision
               </span>
-              <p className="text-xl md:text-2xl font-semibold text-neutral-800 leading-relaxed max-w-4xl">
+              <h3 className="font-headline-md text-2xl sm:text-3xl lg:text-4xl font-extrabold text-neutral-900 leading-snug mb-5">
                 To become the preferred energy resource partner, driving sustainable growth and technical innovation across Africa.
+              </h3>
+              <p className="font-body-md text-surface-variant text-base leading-relaxed mb-6">
+                We envision a resilient African energy landscape founded on indigenous operational sovereignty, cutting-edge reservoir telemetry, and capital discipline. Our forward strategy bridges technological mastery with host community trust to establish enduring benchmarks for energy independence.
               </p>
+              <div className="flex items-center gap-3 font-label-technical text-xs text-primary-container uppercase tracking-wider font-semibold">
+                <span className="w-1.5 h-1.5 rounded-full bg-primary-container"></span>
+                <span>Long-Term Energy Sovereignty</span>
+              </div>
             </div>
+          </div>
 
-            <div className="mb-14">
-              <span className="font-label-technical text-label-technical text-primary-container uppercase tracking-widest block mb-3 font-bold text-xs">
+          {/* Row 2: Our Mission (Text LEFT, Image RIGHT) */}
+          <div className="grid grid-cols-12 gap-8 lg:gap-12 items-center">
+            {/* Text LEFT */}
+            <div className="col-span-12 lg:col-span-6 flex flex-col justify-center pr-0 lg:pr-4">
+              <span className="font-label-technical text-xs text-primary-container uppercase tracking-widest block mb-3 font-bold flex items-center gap-2">
+                <span className="material-symbols-outlined text-sm">flag</span>
                 Our Mission
               </span>
-              <p className="text-xl md:text-2xl font-semibold text-neutral-800 leading-relaxed max-w-4xl">
+              <h3 className="font-headline-md text-2xl sm:text-3xl lg:text-4xl font-extrabold text-neutral-900 leading-snug mb-5">
                 To meet energy needs by creating exceptional and sustainable value through operational excellence, strategic partnerships, and a commitment to our communities.
+              </h3>
+              <p className="font-body-md text-surface-variant text-base leading-relaxed mb-6">
+                Through disciplined field development, modular early production systems, and strict HSE governance, we systematically de-risk and monetize upstream assets. We execute with precision to supply vital hydrocarbons while safeguarding natural habitats and empowering regional workforces.
               </p>
+              <div className="flex items-center gap-3 font-label-technical text-xs text-primary-container uppercase tracking-wider font-semibold">
+                <span className="w-1.5 h-1.5 rounded-full bg-primary-container"></span>
+                <span>Execution Rigor &amp; Community Value</span>
+              </div>
+            </div>
+
+            {/* Image RIGHT */}
+            <div className="col-span-12 lg:col-span-6">
+              <div className="relative aspect-[16/10] sm:aspect-[4/3] bg-neutral-900 overflow-hidden border border-black/10 shadow-lg group">
+                <div
+                  className="w-full h-full bg-cover bg-center grayscale contrast-110 group-hover:scale-105 group-hover:grayscale-0 transition-all duration-700"
+                  style={{
+                    backgroundImage: `url('${getCloudinaryUrl(SECTION_ASSETS.heroSlide2.publicId, SECTION_ASSETS.heroSlide2.fallback)}')`,
+                  }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-pure-black/70 via-transparent to-transparent"></div>
+                <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between font-label-technical text-[11px] text-pure-white/90">
+                  <span className="uppercase tracking-widest bg-pure-black/60 backdrop-blur-md px-3 py-1 border border-white/10">
+                    OPERATIONAL RIGOR
+                  </span>
+                  <span className="tracking-wider">PRODUCTION EXCELLENCE</span>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="px-container-margin mt-12">
-          <h2 className="font-label-technical text-label-technical text-primary-container uppercase tracking-widest mb-12 text-center">
-            Core Values
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="border border-black/10 p-8 bg-neutral-50/50 hover:border-primary-container transition-colors">
-              <span className="font-headline-md text-3xl font-extrabold text-primary-container mb-4 block">
-                01
+          {/* Core Values with Intro Write-up */}
+          <div className="pt-12 border-t border-black/10">
+            <div className="max-w-3xl mx-auto text-center mb-12">
+              <span className="font-label-technical text-xs text-primary-container uppercase tracking-widest block mb-3 font-bold">
+                OPERATIONAL PILLARS
               </span>
-              <h3 className="font-headline-md text-xl font-bold mb-3">Integrity</h3>
-              <p className="font-body-md text-surface-variant text-sm leading-relaxed">
-                Operating with uncompromising transparency, ethical governance, and accountability across every drilling campaign and joint venture partnership.
+              <h3 className="font-headline-md text-3xl sm:text-4xl font-extrabold text-pure-black mb-4">
+                Our Core Values
+              </h3>
+              <p className="font-body-md text-surface-variant text-base leading-relaxed">
+                At Tulcan Energy EPCL, our culture and operations are anchored by four non-negotiable principles. These foundational values guide how we appraise reservoirs, manage environmental footprints, empower local communities, and govern every joint venture alliance.
               </p>
             </div>
 
-            <div className="border border-black/10 p-8 bg-neutral-50/50 hover:border-primary-container transition-colors">
-              <span className="font-headline-md text-3xl font-extrabold text-primary-container mb-4 block">
-                02
-              </span>
-              <h3 className="font-headline-md text-xl font-bold mb-3">Excellence</h3>
-              <p className="font-body-md text-surface-variant text-sm leading-relaxed">
-                Relentless pursuit of engineering perfection, high-resolution subsurface characterization, and operational uptime in all weather regimes.
-              </p>
-            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="border border-black/10 p-8 bg-pure-white hover:border-primary-container transition-all hover:shadow-md">
+                <span className="font-headline-md text-3xl font-extrabold text-primary-container mb-4 block">
+                  01
+                </span>
+                <h4 className="font-headline-md text-xl font-bold mb-3 text-pure-black">Integrity</h4>
+                <p className="font-body-md text-surface-variant text-sm leading-relaxed">
+                  Operating with uncompromising transparency, ethical governance, and accountability across every drilling campaign and joint venture partnership.
+                </p>
+              </div>
 
-            <div className="border border-black/10 p-8 bg-neutral-50/50 hover:border-primary-container transition-colors">
-              <span className="font-headline-md text-3xl font-extrabold text-primary-container mb-4 block">
-                03
-              </span>
-              <h3 className="font-headline-md text-xl font-bold mb-3">Innovation</h3>
-              <p className="font-body-md text-surface-variant text-sm leading-relaxed">
-                Deploying modular early production facilities, artificial lift optimization, and machine-learning seismic processing to maximize recovery factors.
-              </p>
-            </div>
+              <div className="border border-black/10 p-8 bg-pure-white hover:border-primary-container transition-all hover:shadow-md">
+                <span className="font-headline-md text-3xl font-extrabold text-primary-container mb-4 block">
+                  02
+                </span>
+                <h4 className="font-headline-md text-xl font-bold mb-3 text-pure-black">Excellence</h4>
+                <p className="font-body-md text-surface-variant text-sm leading-relaxed">
+                  Relentless pursuit of engineering perfection, high-resolution subsurface characterization, and operational uptime in all weather regimes.
+                </p>
+              </div>
 
-            <div className="border border-black/10 p-8 bg-neutral-50/50 hover:border-primary-container transition-colors">
-              <span className="font-headline-md text-3xl font-extrabold text-primary-container mb-4 block">
-                04
-              </span>
-              <h3 className="font-headline-md text-xl font-bold mb-3">Sustainability</h3>
-              <p className="font-body-md text-surface-variant text-sm leading-relaxed">
-                Steadfast commitment to host community prosperity, carbon abatement strategies, zero routine flaring targets, and environmental stewardship.
-              </p>
+              <div className="border border-black/10 p-8 bg-pure-white hover:border-primary-container transition-all hover:shadow-md">
+                <span className="font-headline-md text-3xl font-extrabold text-primary-container mb-4 block">
+                  03
+                </span>
+                <h4 className="font-headline-md text-xl font-bold mb-3 text-pure-black">Innovation</h4>
+                <p className="font-body-md text-surface-variant text-sm leading-relaxed">
+                  Deploying modular early production facilities, artificial lift optimization, and machine-learning seismic processing to maximize recovery factors.
+                </p>
+              </div>
+
+              <div className="border border-black/10 p-8 bg-pure-white hover:border-primary-container transition-all hover:shadow-md">
+                <span className="font-headline-md text-3xl font-extrabold text-primary-container mb-4 block">
+                  04
+                </span>
+                <h4 className="font-headline-md text-xl font-bold mb-3 text-pure-black">Sustainability</h4>
+                <p className="font-body-md text-surface-variant text-sm leading-relaxed">
+                  Steadfast commitment to host community prosperity, carbon abatement strategies, zero routine flaring targets, and environmental stewardship.
+                </p>
+              </div>
             </div>
           </div>
+
         </div>
       </section>
 
@@ -384,7 +544,62 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 5. Latest News */}
+      {/* 5. Our Technical Partners */}
+      <section className="py-20 bg-neutral-100/70 text-pure-black border-b border-black/5 overflow-hidden">
+        <div className="px-container-margin max-w-7xl mx-auto mb-12">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+            <div className="max-w-3xl">
+              <span className="font-label-technical text-label-technical text-primary-container uppercase tracking-widest block mb-3 font-semibold text-xs">
+                TIER-ONE ALLIANCES · GLOBAL SUPPLY CHAIN
+              </span>
+              <h2 className="font-headline-md text-3xl sm:text-4xl font-extrabold text-pure-black leading-tight mb-4">
+                Our Technical Partners
+              </h2>
+              <p className="font-body-md text-surface-variant text-sm sm:text-base leading-relaxed">
+                Tulcan Energy EPCL collaborates with globally recognized engineering contractors, subsurface diagnostics specialists, and marine logistics providers. Our strategic partnerships ensure every offshore and onshore drilling campaign, pipeline tie-back, and facility integration meets the highest international standards of safety, metallurgical integrity, and operational uptime.
+              </p>
+            </div>
+            <Link
+              href="/partners"
+              className="inline-flex items-center gap-2 text-primary-container font-label-technical text-xs uppercase tracking-widest hover:gap-3 transition-all border-b border-primary-container pb-1 font-semibold shrink-0"
+            >
+              Explore Vendor Network <span className="material-symbols-outlined text-sm">arrow_forward</span>
+            </Link>
+          </div>
+        </div>
+
+        {/* Technical Partners Logo Carousel */}
+        <div className="relative w-full overflow-hidden py-6">
+          <div className="animate-marquee flex items-center gap-6 sm:gap-8">
+            {/* Double the list for infinite loop */}
+            {[...partners, ...partners].map((partner, idx) => (
+              <div
+                key={`${partner.id || idx}-${idx}`}
+                className="w-56 sm:w-64 md:w-72 h-32 sm:h-36 shrink-0 bg-pure-white border border-black/10 px-6 py-4 rounded-sm shadow-sm hover:shadow-md hover:border-primary-container transition-all duration-300 group flex items-center justify-center"
+              >
+                {partner.logoUrl ? (
+                  <div className="w-full h-full flex items-center justify-center p-2">
+                    <img
+                      src={partner.logoUrl}
+                      alt={partner.name || "Technical Partner Logo"}
+                      className="max-h-20 sm:max-h-24 max-w-[180px] sm:max-w-[210px] w-auto h-auto object-contain transition-all duration-300 filter grayscale contrast-110 opacity-85 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105"
+                      loading="lazy"
+                    />
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-center text-neutral-400">
+                    <span className="material-symbols-outlined text-3xl text-primary-container">
+                      corporate_fare
+                    </span>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 6. Latest News */}
       <section className="pt-14 pb-section-v-desktop bg-pure-white text-pure-black border-b border-black/5">
         <div className="px-container-margin">
           <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">

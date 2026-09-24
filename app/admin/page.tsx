@@ -6,7 +6,7 @@ import { buildApiUrl } from "@/lib/api-config";
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState<
-    "overview" | "inquiries" | "applications" | "blogs" | "teams"
+    "overview" | "inquiries" | "applications" | "blogs" | "teams" | "partners"
   >("overview");
 
   const [loading, setLoading] = useState(true);
@@ -16,16 +16,18 @@ export default function AdminDashboard() {
     totalApplications: 0,
     totalBlogs: 0,
     totalStaff: 0,
+    totalPartners: 0,
   });
 
   const [inquiries, setInquiries] = useState<any[]>([]);
   const [applications, setApplications] = useState<any[]>([]);
   const [blogs, setBlogs] = useState<any[]>([]);
   const [teams, setTeams] = useState<any[]>([]);
+  const [partners, setPartners] = useState<any[]>([]);
 
   // Selected item modal view
   const [activeModal, setActiveModal] = useState<
-    "addBlog" | "addTeam" | "editTeam" | "viewInquiry" | null
+    "addBlog" | "addTeam" | "editTeam" | "viewInquiry" | "addPartner" | "editPartner" | null
   >(null);
   const [selectedInquiry, setSelectedInquiry] = useState<any | null>(null);
 
@@ -60,6 +62,18 @@ export default function AdminDashboard() {
     orderIndex: 1,
   });
 
+  const [partnerForm, setPartnerForm] = useState({
+    logoUrl: "",
+    orderIndex: 1,
+  });
+
+  const [editPartnerForm, setEditPartnerForm] = useState({
+    id: "",
+    logoUrl: "",
+    orderIndex: 1,
+  });
+
+  const [uploadingPartnerLogo, setUploadingPartnerLogo] = useState(false);
   const [actionMessage, setActionMessage] = useState("");
 
   // Uploading state
@@ -70,13 +84,15 @@ export default function AdminDashboard() {
 
   const handleFileUpload = async (
     file: File,
-    type: "blog" | "team" | "doc"
+    type: "blog" | "team" | "doc" | "partner"
   ) => {
     const formData = new FormData();
     formData.append("file", file);
     formData.append(
       "folder",
-      type === "doc"
+      type === "partner"
+        ? "tulcan_energy/partners"
+        : type === "doc"
         ? "tulcan_energy/docs"
         : type === "team"
         ? "tulcan_energy/team"
@@ -86,6 +102,7 @@ export default function AdminDashboard() {
     if (type === "blog") setUploadingBlogImg(true);
     if (type === "team") setUploadingTeamImg(true);
     if (type === "doc") setUploadingDoc(true);
+    if (type === "partner") setUploadingPartnerLogo(true);
 
     try {
       const res = await fetch(buildApiUrl("/api/upload"), {
@@ -104,6 +121,13 @@ export default function AdminDashboard() {
             setTeamForm((prev) => ({ ...prev, profileImage: data.url }));
           }
           setActionMessage(`Profile photo uploaded successfully via ${data.provider}.`);
+        } else if (type === "partner") {
+          if (activeModal === "editPartner") {
+            setEditPartnerForm((prev) => ({ ...prev, logoUrl: data.url }));
+          } else {
+            setPartnerForm((prev) => ({ ...prev, logoUrl: data.url }));
+          }
+          setActionMessage(`Partner logo uploaded successfully via ${data.provider}.`);
         } else if (type === "doc") {
           setCompanyProfileUrl(data.url);
           setActionMessage(`Company profile document updated successfully via ${data.provider}.`);
@@ -117,33 +141,40 @@ export default function AdminDashboard() {
       if (type === "blog") setUploadingBlogImg(false);
       if (type === "team") setUploadingTeamImg(false);
       if (type === "doc") setUploadingDoc(false);
+      if (type === "partner") setUploadingPartnerLogo(false);
     }
   };
 
   const fetchData = async () => {
     setLoading(true);
     try {
-      const [ovRes, inqRes, appRes, blogRes, teamRes] = await Promise.all([
+      const [ovRes, inqRes, appRes, blogRes, teamRes, partnerRes] = await Promise.all([
         fetch(buildApiUrl("/api/admin/overview")),
         fetch(buildApiUrl("/api/admin/inquiries")),
         fetch(buildApiUrl("/api/admin/applications")),
         fetch(buildApiUrl("/api/admin/blogs")),
         fetch(buildApiUrl("/api/admin/teams")),
+        fetch(buildApiUrl("/api/admin/partners")),
       ]);
 
-      const [ovData, inqData, appData, blogData, teamData] = await Promise.all([
+      const [ovData, inqData, appData, blogData, teamData, partnerData] = await Promise.all([
         ovRes.json(),
         inqRes.json(),
         appRes.json(),
         blogRes.json(),
         teamRes.json(),
+        partnerRes.json(),
       ]);
 
-      if (ovData.stats) setStats(ovData.stats);
+      if (ovData.stats) setStats((prev) => ({ ...prev, ...ovData.stats }));
       if (inqData.inquiries) setInquiries(inqData.inquiries);
       if (appData.applications) setApplications(appData.applications);
       if (blogData.blogs) setBlogs(blogData.blogs);
       if (teamData.staff) setTeams(teamData.staff);
+      if (partnerData.partners) {
+        setPartners(partnerData.partners);
+        setStats((prev) => ({ ...prev, totalPartners: partnerData.partners.length }));
+      }
     } catch (err) {
       console.error("Failed to load admin data:", err);
     } finally {
@@ -368,6 +399,94 @@ export default function AdminDashboard() {
     if (!confirm("Delete this team member?")) return;
     await fetch(buildApiUrl(`/api/admin/teams?id=${id}`), { method: "DELETE" });
     fetchData();
+  };
+
+  const handleCreatePartner = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const res = await fetch(buildApiUrl("/api/admin/partners"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          logoUrl: partnerForm.logoUrl,
+          orderIndex: parseInt(String(partnerForm.orderIndex)) || 1,
+        }),
+      });
+      if (res.ok) {
+        setActiveModal(null);
+        setPartnerForm({
+          logoUrl: "",
+          orderIndex: (partners.length || 0) + 1,
+        });
+        setActionMessage("Technical Partner logo added successfully.");
+        fetchData();
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleOpenEditPartner = (p: any) => {
+    setEditPartnerForm({
+      id: p.id,
+      logoUrl: p.logoUrl || "",
+      orderIndex: p.orderIndex !== undefined && p.orderIndex !== null ? Number(p.orderIndex) : 1,
+    });
+    setActiveModal("editPartner");
+  };
+
+  const handleUpdatePartner = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const res = await fetch(buildApiUrl("/api/admin/partners"), {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: editPartnerForm.id,
+          logoUrl: editPartnerForm.logoUrl,
+          orderIndex: parseInt(String(editPartnerForm.orderIndex)) || 1,
+        }),
+      });
+      if (res.ok) {
+        setActiveModal(null);
+        setActionMessage("Technical Partner updated successfully.");
+        fetchData();
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleDeletePartner = async (id: string) => {
+    if (!confirm("Are you sure you want to remove this partner?")) return;
+    try {
+      const res = await fetch(buildApiUrl(`/api/admin/partners?id=${id}`), { method: "DELETE" });
+      if (res.ok) {
+        setActionMessage("Partner removed.");
+        fetchData();
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleQuickReorderPartner = async (partner: any, direction: "up" | "down") => {
+    const currentOrder = partner.orderIndex !== undefined && partner.orderIndex !== null ? Number(partner.orderIndex) : 1;
+    const newOrder = direction === "up" ? Math.max(1, currentOrder - 1) : currentOrder + 1;
+    if (newOrder === currentOrder) return;
+
+    try {
+      const res = await fetch(buildApiUrl("/api/admin/partners"), {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: partner.id, orderIndex: newOrder }),
+      });
+      if (res.ok) {
+        fetchData();
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   if (checkingAuth) {
@@ -667,6 +786,21 @@ export default function AdminDashboard() {
               </div>
               <span className="text-neutral-500 text-[10px]">{stats.totalStaff}</span>
             </button>
+
+            <button
+              onClick={() => setActiveTab("partners")}
+              className={`w-full flex items-center justify-between px-3 py-2.5 rounded text-xs font-label-technical uppercase tracking-wider transition-colors ${
+                activeTab === "partners"
+                  ? "bg-primary-container text-white font-bold"
+                  : "text-neutral-400 hover:bg-neutral-900 hover:text-white"
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <span className="material-symbols-outlined text-lg">corporate_fare</span>
+                Technical Partners
+              </div>
+              <span className="text-neutral-500 text-[10px]">{stats.totalPartners || partners.length}</span>
+            </button>
           </div>
 
           <div className="p-3 bg-neutral-900/60 border border-neutral-800 rounded text-xs text-neutral-400">
@@ -780,6 +914,26 @@ export default function AdminDashboard() {
                   </div>
                   <div className="text-xs text-neutral-400 mt-2 font-label-technical">
                     Leadership & Operating Comm.
+                  </div>
+                </div>
+
+                <div
+                  onClick={() => setActiveTab("partners")}
+                  className="bg-neutral-950 p-6 border border-neutral-800 rounded-sm cursor-pointer hover:border-primary-container transition-colors"
+                >
+                  <div className="flex justify-between items-start mb-4">
+                    <span className="font-label-technical text-xs text-neutral-400 uppercase">
+                      Technical Partners
+                    </span>
+                    <span className="material-symbols-outlined text-primary-container text-xl">
+                      corporate_fare
+                    </span>
+                  </div>
+                  <div className="font-headline-md text-4xl font-extrabold text-white">
+                    {stats.totalPartners || partners.length}
+                  </div>
+                  <div className="text-xs text-neutral-400 mt-2 font-label-technical">
+                    Tier-1 Alliances & Vendors
                   </div>
                 </div>
               </div>
@@ -1435,6 +1589,104 @@ export default function AdminDashboard() {
               </div>
             </div>
           )}
+
+          {/* TAB 6: TECHNICAL PARTNERS */}
+          {activeTab === "partners" && (
+            <div className="space-y-6 animate-fadeIn">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div>
+                  <h1 className="font-headline-md text-3xl font-bold text-white mb-2">
+                    Technical Partners & Vendors
+                  </h1>
+                  <p className="text-sm text-neutral-400">
+                    Manage tier-one engineering alliances, logistics networks, and technology vendors displayed on the homepage carousel and partners page.
+                  </p>
+                </div>
+                <button
+                  onClick={() => {
+                    setPartnerForm({
+                      logoUrl: "",
+                      orderIndex: (partners.length || 0) + 1,
+                    });
+                    setActiveModal("addPartner");
+                  }}
+                  className="bg-primary-container text-white px-5 py-2.5 rounded text-xs font-label-technical uppercase tracking-wider hover:brightness-110 flex items-center gap-2 shadow-lg shrink-0"
+                >
+                  <span className="material-symbols-outlined text-sm">add</span>
+                  Add Partner Logo
+                </button>
+              </div>
+
+              {/* Partners Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {partners.map((p, idx) => (
+                  <div
+                    key={p.id || idx}
+                    className="bg-neutral-950 border border-neutral-800 rounded p-5 flex flex-col justify-between hover:border-neutral-700 transition-colors"
+                  >
+                    <div>
+                      <div className="flex items-start justify-between gap-3 mb-4">
+                        <span className="text-[10px] font-label-technical bg-neutral-900 border border-neutral-800 px-2 py-0.5 rounded text-neutral-400 uppercase tracking-widest">
+                          Rank #{p.orderIndex !== undefined ? p.orderIndex : idx + 1}
+                        </span>
+                        <div className="flex items-center gap-1">
+                          <button
+                            type="button"
+                            onClick={() => handleQuickReorderPartner(p, "up")}
+                            title="Move Up"
+                            className="w-6 h-6 flex items-center justify-center rounded bg-neutral-900 border border-neutral-800 hover:bg-neutral-800 text-neutral-300"
+                          >
+                            <span className="material-symbols-outlined text-xs">arrow_upward</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleQuickReorderPartner(p, "down")}
+                            title="Move Down"
+                            className="w-6 h-6 flex items-center justify-center rounded bg-neutral-900 border border-neutral-800 hover:bg-neutral-800 text-neutral-300"
+                          >
+                            <span className="material-symbols-outlined text-xs">arrow_downward</span>
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Logo Container */}
+                      <div className="h-32 bg-white/5 border border-white/10 rounded flex items-center justify-center p-4 mb-4">
+                        {p.logoUrl ? (
+                          <img
+                            src={p.logoUrl}
+                            alt="Partner Logo"
+                            className="max-h-24 max-w-full object-contain filter brightness-100"
+                          />
+                        ) : (
+                          <span className="material-symbols-outlined text-4xl text-neutral-600">
+                            corporate_fare
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="pt-3 border-t border-neutral-800 flex justify-between items-center text-xs">
+                      <button
+                        type="button"
+                        onClick={() => handleOpenEditPartner(p)}
+                        className="text-primary hover:underline flex items-center gap-1 font-label-technical uppercase tracking-wider text-[11px]"
+                      >
+                        <span className="material-symbols-outlined text-xs">edit</span>
+                        Edit Logo
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleDeletePartner(p.id)}
+                        className="text-red-400 hover:underline font-label-technical uppercase tracking-wider text-[11px]"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </main>
       </div>
 
@@ -1994,6 +2246,212 @@ export default function AdminDashboard() {
                 Close
               </button>
             </div>
+          </div>
+        </div>
+      )}
+      {/* MODAL: ADD PARTNER */}
+      {activeModal === "addPartner" && (
+        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-neutral-900 border border-neutral-700 w-full max-w-lg p-6 rounded shadow-2xl animate-scaleUp">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="font-headline-md text-xl font-bold text-white">Add Technical Partner</h3>
+              <button
+                onClick={() => setActiveModal(null)}
+                className="text-neutral-400 hover:text-white"
+              >
+                ✕
+              </button>
+            </div>
+
+            <form onSubmit={handleCreatePartner} className="space-y-4 text-xs">
+              <div>
+                <label className="block text-neutral-300 font-label-technical uppercase mb-1">
+                  Display Order Rank *
+                </label>
+                <input
+                  type="number"
+                  min={1}
+                  required
+                  value={partnerForm.orderIndex}
+                  onChange={(e) => setPartnerForm({ ...partnerForm, orderIndex: parseInt(e.target.value) || 1 })}
+                  className="w-full bg-neutral-950 border border-neutral-700 p-2.5 rounded text-white outline-none focus:border-primary"
+                />
+              </div>
+
+              <div>
+                <label className="block text-neutral-300 font-label-technical uppercase mb-1">
+                  Partner Logo (Upload or URL) *
+                </label>
+                <div className="flex items-center gap-3 mb-2">
+                  <input
+                    type="file"
+                    id="partner-logo-file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) handleFileUpload(file, "partner");
+                    }}
+                  />
+                  <label
+                    htmlFor="partner-logo-file"
+                    className={`flex items-center gap-1.5 px-3 py-2 rounded text-xs font-label-technical uppercase tracking-wider cursor-pointer border ${
+                      uploadingPartnerLogo
+                        ? "bg-neutral-800 text-neutral-400 border-neutral-700 cursor-not-allowed"
+                        : "bg-neutral-800 hover:bg-neutral-700 text-white border-neutral-600"
+                    }`}
+                  >
+                    <span className="material-symbols-outlined text-sm">
+                      {uploadingPartnerLogo ? "hourglass_top" : "cloud_upload"}
+                    </span>
+                    {uploadingPartnerLogo ? "Uploading..." : "Upload Logo File"}
+                  </label>
+                  {partnerForm.logoUrl && (
+                    <div className="flex items-center gap-2">
+                      <img
+                        src={partnerForm.logoUrl}
+                        alt="Preview"
+                        className="w-8 h-8 object-contain rounded bg-white/10 p-1 border border-neutral-700"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setPartnerForm({ ...partnerForm, logoUrl: "" })}
+                        className="text-red-400 hover:text-red-300 text-xs"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  )}
+                </div>
+                <input
+                  type="url"
+                  required
+                  placeholder="Or enter logo URL (https://...)"
+                  value={partnerForm.logoUrl}
+                  onChange={(e) => setPartnerForm({ ...partnerForm, logoUrl: e.target.value })}
+                  className="w-full bg-neutral-950 border border-neutral-700 p-2.5 rounded text-white outline-none focus:border-primary"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-3 pt-3 border-t border-neutral-800">
+                <button
+                  type="button"
+                  onClick={() => setActiveModal(null)}
+                  className="px-4 py-2.5 border border-neutral-700 text-neutral-300 rounded font-label-technical uppercase tracking-wider hover:bg-neutral-800"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="bg-primary-container text-white px-6 py-2.5 rounded font-label-technical uppercase tracking-wider hover:brightness-110"
+                >
+                  Add Partner
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL: EDIT PARTNER */}
+      {activeModal === "editPartner" && (
+        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-neutral-900 border border-neutral-700 w-full max-w-lg p-6 rounded shadow-2xl animate-scaleUp">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="font-headline-md text-xl font-bold text-white">Edit Technical Partner</h3>
+              <button
+                onClick={() => setActiveModal(null)}
+                className="text-neutral-400 hover:text-white"
+              >
+                ✕
+              </button>
+            </div>
+
+            <form onSubmit={handleUpdatePartner} className="space-y-4 text-xs">
+              <div>
+                <label className="block text-neutral-300 font-label-technical uppercase mb-1">
+                  Display Order Rank *
+                </label>
+                <input
+                  type="number"
+                  min={1}
+                  required
+                  value={editPartnerForm.orderIndex}
+                  onChange={(e) => setEditPartnerForm({ ...editPartnerForm, orderIndex: parseInt(e.target.value) || 1 })}
+                  className="w-full bg-neutral-950 border border-neutral-700 p-2.5 rounded text-white outline-none focus:border-primary"
+                />
+              </div>
+
+              <div>
+                <label className="block text-neutral-300 font-label-technical uppercase mb-1">
+                  Partner Logo (Upload or URL) *
+                </label>
+                <div className="flex items-center gap-3 mb-2">
+                  <input
+                    type="file"
+                    id="edit-partner-logo-file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) handleFileUpload(file, "partner");
+                    }}
+                  />
+                  <label
+                    htmlFor="edit-partner-logo-file"
+                    className={`flex items-center gap-1.5 px-3 py-2 rounded text-xs font-label-technical uppercase tracking-wider cursor-pointer border ${
+                      uploadingPartnerLogo
+                        ? "bg-neutral-800 text-neutral-400 border-neutral-700 cursor-not-allowed"
+                        : "bg-neutral-800 hover:bg-neutral-700 text-white border-neutral-600"
+                    }`}
+                  >
+                    <span className="material-symbols-outlined text-sm">
+                      {uploadingPartnerLogo ? "hourglass_top" : "cloud_upload"}
+                    </span>
+                    {uploadingPartnerLogo ? "Uploading..." : "Upload Logo File"}
+                  </label>
+                  {editPartnerForm.logoUrl && (
+                    <div className="flex items-center gap-2">
+                      <img
+                        src={editPartnerForm.logoUrl}
+                        alt="Preview"
+                        className="w-8 h-8 object-contain rounded bg-white/10 p-1 border border-neutral-700"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setEditPartnerForm({ ...editPartnerForm, logoUrl: "" })}
+                        className="text-red-400 hover:text-red-300 text-xs"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  )}
+                </div>
+                <input
+                  type="url"
+                  required
+                  value={editPartnerForm.logoUrl}
+                  onChange={(e) => setEditPartnerForm({ ...editPartnerForm, logoUrl: e.target.value })}
+                  className="w-full bg-neutral-950 border border-neutral-700 p-2.5 rounded text-white outline-none focus:border-primary"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-3 pt-3 border-t border-neutral-800">
+                <button
+                  type="button"
+                  onClick={() => setActiveModal(null)}
+                  className="px-4 py-2.5 border border-neutral-700 text-neutral-300 rounded font-label-technical uppercase tracking-wider hover:bg-neutral-800"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="bg-primary-container text-white px-6 py-2.5 rounded font-label-technical uppercase tracking-wider hover:brightness-110"
+                >
+                  Save Changes
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
