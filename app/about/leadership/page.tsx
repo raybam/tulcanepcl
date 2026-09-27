@@ -177,35 +177,35 @@ export default function LeadershipPage() {
       <Navbar />
 
       {/* Header Banner */}
-      <header className="pt-36 pb-16 px-container-margin bg-pure-white border-b border-black/10">
+      <header className="pt-28 sm:pt-36 pb-12 sm:pb-16 px-3 sm:px-6 lg:px-container-margin bg-pure-white border-b border-black/10">
         <div className="max-w-7xl mx-auto">
-          <div className="flex items-center gap-3 font-label-technical text-label-technical text-primary-container uppercase tracking-widest mb-3">
+          <div className="flex items-center gap-2 sm:gap-3 font-label-technical text-xs text-primary-container uppercase tracking-widest mb-2 sm:mb-3 font-semibold">
             <span>Corporate Governance</span>
             <span className="w-1.5 h-1.5 bg-primary-container rounded-full"></span>
             <span>Executive Team</span>
           </div>
 
-          <h1 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg font-bold text-pure-black tracking-tight leading-tight mb-4">
+          <h1 className="font-headline-lg text-2xl sm:text-3xl md:text-5xl font-bold text-pure-black tracking-tight leading-tight mb-3 sm:mb-4">
             Leadership & Stewardship
           </h1>
 
-          <p className="font-body-lg text-surface-variant max-w-3xl leading-relaxed">
+          <p className="font-body-lg text-surface-variant max-w-3xl leading-relaxed text-sm sm:text-base md:text-lg">
             Our leadership team unites seasoned industry pioneers, technical reservoir specialists, and disciplined financial strategists to steer Tulcan Energy toward sustained operational dominance.
           </p>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-container-margin py-section-v-tablet">
+      <main className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-container-margin py-12 sm:py-16 md:py-section-v-tablet">
         {/* Executive Directors */}
-        <section className="mb-24">
-          <div className="border-b border-black/10 pb-4 mb-12 flex justify-between items-end">
+        <section className="mb-16 sm:mb-24">
+          <div className="border-b border-black/10 pb-4 mb-8 sm:mb-12 flex justify-between items-end">
             <div>
-              <span className="font-label-technical text-xs uppercase tracking-widest text-primary-container block mb-1">
+              <span className="font-label-technical text-xs uppercase tracking-widest text-primary-container block mb-1 font-semibold">
                 Executive Direction
               </span>
-              <h2 className="font-headline-md text-3xl font-bold text-pure-black">Board & Executive Officers</h2>
+              <h2 className="font-headline-md text-2xl sm:text-3xl font-bold text-pure-black">Board & Executive Officers</h2>
             </div>
-            <span className="font-label-technical text-xs text-surface-variant uppercase tracking-wider">
+            <span className="font-label-technical text-[11px] sm:text-xs text-surface-variant uppercase tracking-wider font-semibold">
               {loading && executives.length === 0
                 ? "..."
                 : `${String(executives.length).padStart(2, "0")} PRINCIPALS`}
@@ -213,13 +213,13 @@ export default function LeadershipPage() {
           </div>
 
           {loading && executives.length === 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center w-full">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 justify-items-center w-full">
               {[1, 2, 3].map((n) => (
                 <div
                   key={n}
-                  className="w-full max-w-[420px] bg-neutral-50/50 p-5 border border-black/10 animate-pulse"
+                  className="w-full max-w-[420px] bg-neutral-50/50 p-4 sm:p-5 lg:p-6 border border-black/10 rounded-xl sm:rounded-2xl lg:rounded-none animate-pulse"
                 >
-                  <div className="w-full max-w-[400px] h-[400px] aspect-square bg-neutral-200/70 mb-5 mx-auto" />
+                  <div className="w-full max-w-[400px] h-[320px] sm:h-[400px] aspect-square bg-neutral-200/70 mb-4 sm:mb-5 lg:mb-6 mx-auto rounded-lg sm:rounded-xl lg:rounded-none" />
                   <div className="h-4 bg-neutral-200/80 rounded w-1/3 mb-2" />
                   <div className="h-6 bg-neutral-200 rounded w-2/3 mb-3" />
                   <div className="h-3 bg-neutral-200/60 rounded w-full mb-1" />
@@ -228,21 +228,21 @@ export default function LeadershipPage() {
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 justify-items-center">
               {executives.map((exec) => (
                 <article
                   key={exec.id}
                   onClick={() => setSelectedMember(exec)}
-                  className="group cursor-pointer bg-neutral-50/50 p-5 border border-black/10 hover:border-primary-container transition-all duration-300 w-full max-w-[420px] flex flex-col justify-between"
+                  className="group cursor-pointer bg-neutral-50/50 p-4 sm:p-5 lg:p-6 border border-black/10 rounded-xl sm:rounded-2xl lg:rounded-none hover:border-primary-container transition-all hover:shadow-md lg:hover:shadow-none duration-300 w-full max-w-[420px] flex flex-col justify-between"
                 >
                   <div>
-                    <div className="relative w-full max-w-[400px] h-[400px] aspect-square bg-neutral-900 border border-black/10 mb-5 overflow-hidden mx-auto">
+                    <div className="relative w-full max-w-[400px] h-[320px] sm:h-[400px] aspect-square bg-neutral-900 border border-black/10 rounded-lg sm:rounded-xl lg:rounded-none mb-4 sm:mb-5 lg:mb-6 overflow-hidden mx-auto shadow-sm lg:shadow-none">
                       <div
                         className="w-full h-full bg-cover bg-center transition-all duration-700 [filter:grayscale(100%)] group-hover:[filter:grayscale(0%)] group-hover:scale-105"
                         style={{ backgroundImage: `url('${exec.image}')` }}
                       />
                       <div className="absolute inset-0 bg-primary-container/0 group-hover:bg-primary-container/15 transition-colors duration-500 pointer-events-none mix-blend-color" />
-                      <div className="absolute top-4 right-4 bg-pure-white px-3 py-1 font-label-technical text-xs text-pure-black border border-black/10 shadow-sm">
+                      <div className="absolute top-3 sm:top-4 right-3 sm:right-4 bg-pure-white px-3 py-1 rounded font-label-technical text-xs text-pure-black border border-black/10 shadow-sm font-semibold">
                         {exec.tag || "Executive"}
                       </div>
                     </div>
@@ -251,10 +251,10 @@ export default function LeadershipPage() {
                       <span className="font-label-technical text-xs text-primary-container uppercase tracking-widest font-semibold block mb-1">
                         {exec.role}
                       </span>
-                      <h3 className="font-headline-md text-2xl font-bold text-pure-black mb-3 group-hover:text-primary-container transition-colors">
+                      <h3 className="font-headline-md text-xl sm:text-2xl font-bold text-pure-black mb-2 sm:mb-3 group-hover:text-primary-container transition-colors">
                         {exec.name}
                       </h3>
-                      <p className="font-body-md text-surface-variant text-sm leading-relaxed line-clamp-3">
+                      <p className="font-body-md text-surface-variant text-xs sm:text-sm leading-relaxed line-clamp-3">
                         {exec.bio}
                       </p>
                     </div>
@@ -267,14 +267,14 @@ export default function LeadershipPage() {
 
         {/* Operating Committee */}
         <section>
-          <div className="border-b border-black/10 pb-4 mb-12 flex justify-between items-end">
+          <div className="border-b border-black/10 pb-4 mb-8 sm:mb-12 flex justify-between items-end">
             <div>
-              <span className="font-label-technical text-xs uppercase tracking-widest text-primary-container block mb-1">
+              <span className="font-label-technical text-xs uppercase tracking-widest text-primary-container block mb-1 font-semibold">
                 Operational Governance
               </span>
-              <h2 className="font-headline-md text-3xl font-bold text-pure-black">Operating Committee</h2>
+              <h2 className="font-headline-md text-2xl sm:text-3xl font-bold text-pure-black">Operating Committee</h2>
             </div>
-            <span className="font-label-technical text-xs text-surface-variant uppercase tracking-wider">
+            <span className="font-label-technical text-[11px] sm:text-xs text-surface-variant uppercase tracking-wider font-semibold">
               {loading && committee.length === 0
                 ? "..."
                 : `${String(committee.length).padStart(2, "0")} MEMBERS`}
@@ -282,35 +282,35 @@ export default function LeadershipPage() {
           </div>
 
           {loading && committee.length === 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
               {[1, 2, 3, 4].map((n) => (
-                <div key={n} className="bg-neutral-50/30 p-4 border border-black/10 animate-pulse">
-                  <div className="w-full aspect-square bg-neutral-200/70 mb-4" />
+                <div key={n} className="bg-neutral-50/30 p-4 border border-black/10 rounded-xl sm:rounded-2xl lg:rounded-none animate-pulse">
+                  <div className="w-full aspect-square bg-neutral-200/70 mb-4 rounded-lg sm:rounded-xl lg:rounded-none" />
                   <div className="h-5 bg-neutral-200 rounded w-3/4 mb-2" />
                   <div className="h-3 bg-neutral-200/70 rounded w-1/2" />
                 </div>
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
               {committee.map((member, idx) => (
                 <article
                   key={member.id || member.name}
                   onClick={() => setSelectedMember(member)}
-                  className={`group cursor-pointer bg-neutral-50/30 p-4 border border-black/10 hover:border-primary-container transition-all duration-300 ${
+                  className={`group cursor-pointer bg-neutral-50/30 p-4 border border-black/10 rounded-xl sm:rounded-2xl lg:rounded-none hover:border-primary-container hover:shadow-md lg:hover:shadow-none transition-all duration-300 ${
                     idx % 2 === 1 ? "lg:mt-6" : ""
                   }`}
                 >
-                  <div className="relative w-full aspect-square bg-neutral-900 border border-black/10 mb-4 overflow-hidden">
+                  <div className="relative w-full aspect-square bg-neutral-900 border border-black/10 rounded-lg sm:rounded-xl lg:rounded-none mb-4 overflow-hidden shadow-sm lg:shadow-none">
                     <div
                       className="w-full h-full bg-cover bg-center filter grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500"
                       style={{ backgroundImage: `url('${member.image}')` }}
                     />
                   </div>
-                  <h4 className="font-headline-md text-lg font-bold text-pure-black mb-1 group-hover:text-primary-container transition-colors">
+                  <h4 className="font-headline-md text-base sm:text-lg font-bold text-pure-black mb-1 group-hover:text-primary-container transition-colors">
                     {member.name}
                   </h4>
-                  <p className="font-label-technical text-xs text-primary-container font-medium uppercase tracking-wider mb-1">
+                  <p className="font-label-technical text-xs text-primary-container font-semibold uppercase tracking-wider mb-1">
                     {member.role}
                   </p>
                   {member.department && (
@@ -327,17 +327,17 @@ export default function LeadershipPage() {
 
       {/* Member Bio Modal */}
       {selectedMember && (
-        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-pure-white border border-black/20 w-full max-w-lg p-6 rounded-sm shadow-2xl animate-scaleUp">
+        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+          <div className="bg-pure-white border border-black/20 w-full max-w-lg p-5 sm:p-6 rounded-xl sm:rounded-2xl lg:rounded-sm shadow-2xl animate-scaleUp">
             <div className="flex justify-between items-start mb-4">
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-3 sm:gap-4">
                 <img
                   src={selectedMember.image}
                   alt={selectedMember.name}
-                  className="w-16 h-16 object-cover rounded-full border border-black/10"
+                  className="w-14 sm:w-16 h-14 sm:h-16 object-cover rounded-full border border-black/10"
                 />
                 <div>
-                  <h3 className="font-headline-md text-xl font-bold text-pure-black">
+                  <h3 className="font-headline-md text-lg sm:text-xl font-bold text-pure-black">
                     {selectedMember.name}
                   </h3>
                   <p className="text-xs font-label-technical text-primary-container uppercase font-semibold">
@@ -357,7 +357,7 @@ export default function LeadershipPage() {
               <span className="text-xs font-label-technical uppercase tracking-widest text-surface-variant block mb-2 font-bold">
                 Executive Profile & Credentials
               </span>
-              <p className="font-body-md text-surface-variant text-sm leading-relaxed whitespace-pre-line">
+              <p className="font-body-md text-surface-variant text-xs sm:text-sm leading-relaxed whitespace-pre-line">
                 {selectedMember.bio || "Key operational and strategic leader driving Tulcan Energy's growth and operational excellence across Nigerian upstream assets."}
               </p>
             </div>
@@ -365,7 +365,7 @@ export default function LeadershipPage() {
             <div className="flex justify-end">
               <button
                 onClick={() => setSelectedMember(null)}
-                className="px-4 py-2 bg-primary-container text-white text-xs font-label-technical uppercase tracking-wider rounded-sm hover:brightness-110"
+                className="px-4 py-2 bg-primary-container text-white text-xs font-label-technical uppercase tracking-wider rounded hover:brightness-110"
               >
                 Close
               </button>

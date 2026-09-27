@@ -57,15 +57,15 @@ export function getCloudinaryUrl(
  */
 export const SECTION_ASSETS = {
   heroSlide1: {
-    publicId: "tulcan_energy/hero-1",
+    publicId: "https://res.cloudinary.com/xh7slab6/image/upload/v1789854243/tulcan_energy/hero-1.jpg",
     fallback: "/images/hero-1.jpg",
   },
   heroSlide2: {
-    publicId: "https://res.cloudinary.com/xh7slab6/image/upload/v1790288154/3d-rendering-arrow-hitting-target.jpg",
+    publicId: "https://res.cloudinary.com/xh7slab6/image/upload/v1789854245/tulcan_energy/hero-2.jpg",
     fallback: "/images/hero-2.jpg",
   },
   heroSlide3: {
-    publicId: "tulcan_energy/hero-3",
+    publicId: "https://res.cloudinary.com/xh7slab6/image/upload/v1789854247/tulcan_energy/hero-3.jpg",
     fallback: "/images/hero-3.jpg",
   },
   heroSlide4: {
@@ -73,23 +73,27 @@ export const SECTION_ASSETS = {
     fallback: "/images/hero-4.jpg",
   },
   headerCorporate: {
-    publicId: "https://res.cloudinary.com/xh7slab6/image/upload/v1790288154/retinal-biometrics-technology-with-man-s-eye-digital-remix.jpg",
+    publicId: "https://res.cloudinary.com/xh7slab6/image/upload/v1790288154/retinal-biometrics-technology-with-man-s-eye-digital-remix.jpg", //"https://res.cloudinary.com/xh7slab6/image/upload/v1789854236/tulcan_energy/header-corporate.jpg",
     fallback: "/images/header-corporate.jpg",
   },
   headerHse: {
-    publicId: "tulcan_energy/header-hse",
+    publicId: "https://res.cloudinary.com/xh7slab6/image/upload/v1789854241/tulcan_energy/header-hse.jpg",
     fallback: "/images/header-hse.jpg",
   },
   headerCsr: {
-    publicId: "tulcan_energy/header-csr",
+    publicId: "https://res.cloudinary.com/xh7slab6/image/upload/v1789854237/tulcan_energy/header-csr.jpg",
     fallback: "/images/header-csr.jpg",
   },
   headerEsg: {
-    publicId: "tulcan_energy/header-esg",
+    publicId: "https://res.cloudinary.com/xh7slab6/image/upload/v1789854239/tulcan_energy/header-esg.jpg",
     fallback: "/images/header-esg.jpg",
   },
+  headerPartners: {
+    publicId: "https://res.cloudinary.com/xh7slab6/image/upload/v1789854245/tulcan_energy/hero-2.jpg",
+    fallback: "/images/hero-2.jpg",
+  },
   logo: {
-    publicId: "tulcan_energy/logo",
+    publicId: "https://res.cloudinary.com/xh7slab6/image/upload/v1789854250/tulcan_energy/logo.png",
     fallback: "/images/logo.png",
   },
   logoWhite: {
@@ -97,7 +101,11 @@ export const SECTION_ASSETS = {
     fallback: "/images/logo-white.png",
   },
   companyProfilePdf: {
-    publicId: "tulcan_energy/company-profile",
+    publicId: "https://res.cloudinary.com/xh7slab6/image/upload/v1789855559/tulcan_energy/Tulcan_Energy_Company_Profile.pdf",
     fallback: "/docs/Tulcan_Energy_Company_Profile.pdf",
+  },
+  mission: {
+    publicId: "https://res.cloudinary.com/xh7slab6/image/upload/v1790288154/3d-rendering-arrow-hitting-target.jpg",
+    fallback: "/images/hero-2.jpg",
   },
 };

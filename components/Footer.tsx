@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="bg-pure-black text-pure-white py-20 px-container-margin border-t border-white/10 relative overflow-hidden">
+    <footer className="bg-pure-black text-pure-white py-14 sm:py-20 px-4 sm:px-8 xl:px-container-margin border-t border-white/10 relative overflow-hidden">
       {/* Background blueprint grid overlay */}
       <div className="absolute inset-0 bg-grid opacity-10 pointer-events-none"></div>
 

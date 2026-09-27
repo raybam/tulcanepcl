@@ -48,40 +48,40 @@ export default function HSEPage() {
 
       <main className="pt-[88px]">
         {/* Hero Section */}
-        <section className="relative min-h-[580px] flex items-center pt-24 pb-16 bg-pure-black text-pure-white border-b border-black/10">
+        <section className="relative min-h-[500px] lg:min-h-[580px] flex items-center pt-8 pb-12 bg-pure-black text-pure-white border-b border-black/10">
           <div className="absolute inset-0 z-0">
             <div
-              className="bg-cover bg-center w-full h-full opacity-40 grayscale"
+              className="bg-cover bg-center w-full h-full opacity-70"
               style={{
-                backgroundImage: `url('${getCloudinaryUrl(SECTION_ASSETS.headerHse.publicId, SECTION_ASSETS.headerHse.fallback)}')`,
+                backgroundImage: `url('${getCloudinaryUrl(SECTION_ASSETS.headerHse.publicId, SECTION_ASSETS.headerHse.fallback)}'), url('${SECTION_ASSETS.headerHse.fallback}')`,
               }}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-pure-black via-pure-black/80 to-transparent"></div>
-            <div className="absolute inset-0 bg-grid opacity-20"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-pure-black via-pure-black/75 to-pure-black/40"></div>
+            <div className="absolute inset-0 bg-grid opacity-15"></div>
           </div>
 
-          <div className="relative z-10 max-w-7xl mx-auto px-container-margin w-full">
+          <div className="relative z-10 max-w-7xl mx-auto px-3 sm:px-6 lg:px-container-margin w-full my-auto">
             <div className="max-w-3xl">
-              <span className="font-label-technical text-xs text-primary uppercase tracking-widest font-semibold block mb-4">
+              <span className="font-label-technical text-xs text-primary uppercase tracking-widest font-semibold block mb-3">
                 QHSE Policy & Operational Safety
               </span>
-              <h1 className="font-headline-lg text-4xl md:text-7xl font-extrabold text-pure-white mb-6 leading-tight tracking-tight">
-                Health, Safety & Environment
+              <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-7xl font-extrabold text-pure-white mb-4 leading-tight tracking-tight">
+                Health, Safety &amp; Environment
               </h1>
-              <p className="font-body-lg text-on-surface-variant text-lg leading-relaxed mb-8">
+              <p className="font-body-lg text-on-surface-variant text-xs sm:text-base md:text-lg leading-relaxed mb-6">
                 Operating with the belief that all incidents and environmental releases are preventable through systematic hazard identification and disciplined engineering controls.
               </p>
-              <div className="flex items-center gap-6">
-                <div className="p-4 bg-white/10 backdrop-blur-md border border-white/20 rounded">
-                  <span className="font-headline-md text-3xl font-extrabold text-pure-white block">
+              <div className="flex flex-wrap items-center gap-4 sm:gap-6">
+                <div className="p-3.5 sm:p-4 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl sm:rounded-2xl lg:rounded-none shadow-lg">
+                  <span className="font-headline-md text-2xl sm:text-3xl font-extrabold text-pure-white block">
                     0 LTI
                   </span>
                   <span className="font-label-technical text-[11px] text-primary uppercase tracking-wider">
                     Lost Time Injuries
                   </span>
                 </div>
-                <div className="p-4 bg-white/10 backdrop-blur-md border border-white/20 rounded">
-                  <span className="font-headline-md text-3xl font-extrabold text-pure-white block">
+                <div className="p-3.5 sm:p-4 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl sm:rounded-2xl lg:rounded-none shadow-lg">
+                  <span className="font-headline-md text-2xl sm:text-3xl font-extrabold text-pure-white block">
                     100%
                   </span>
                   <span className="font-label-technical text-[11px] text-primary uppercase tracking-wider">
@@ -94,22 +94,22 @@ export default function HSEPage() {
         </section>
 
         {/* Section 1: HSE Operational Framework */}
-        <section className="py-24 bg-pure-white border-b border-black/10">
-          <div className="max-w-7xl mx-auto px-container-margin">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+        <section className="py-12 sm:py-16 lg:py-24 bg-pure-white border-b border-black/10">
+          <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-container-margin">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
               <div className="lg:col-span-5">
                 <div className="flex items-center space-x-2 text-primary-container text-xs font-bold uppercase tracking-widest mb-3">
                   <span className="w-2 h-2 rounded-full bg-primary-container"></span>
                   <span>Policy Architecture</span>
                 </div>
-                <h2 className="font-headline-md text-3xl lg:text-4xl font-bold tracking-tight text-pure-black leading-tight">
+                <h2 className="font-headline-md text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-pure-black leading-tight">
                   An Uncompromising Culture of Systematic Hazard Elimination
                 </h2>
-                <p className="mt-5 text-surface-variant text-sm leading-relaxed">
+                <p className="mt-5 text-surface-variant text-xs sm:text-sm leading-relaxed">
                   Our Health, Safety, and Environment Management System (HSE-MS) integrates directly into every phase of our upstream and downstream lifecycles—from seismic acquisition and deepwater drilling to pipeline logistics and facility decommissioning.
                 </p>
-                <div className="mt-8 p-6 bg-neutral-50 border-l-4 border-primary-container rounded-r">
-                  <p className="text-sm font-semibold text-neutral-800 italic leading-relaxed">
+                <div className="mt-8 p-5 sm:p-6 bg-neutral-50 border-l-4 border-primary-container rounded-r-xl lg:rounded-none shadow-sm">
+                  <p className="text-xs sm:text-sm font-semibold text-neutral-800 italic leading-relaxed">
                     &ldquo;Safety is never compromised for production speed or economic expediency. Every worker, contractor, and visitor holds unconditional Stop Work Authority.&rdquo;
                   </p>
                   <p className="mt-3 text-xs font-bold uppercase tracking-wider text-primary-container">
@@ -118,12 +118,12 @@ export default function HSEPage() {
                 </div>
               </div>
 
-              <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div className="p-8 bg-neutral-50 border border-black/10 rounded-sm hover:border-primary-container transition shadow-sm">
-                  <div className="w-12 h-12 bg-white border border-black/10 flex items-center justify-center rounded-sm text-primary-container mb-6">
+              <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                <div className="p-6 sm:p-8 bg-neutral-50 border border-black/10 rounded-xl sm:rounded-2xl lg:rounded-none hover:border-primary-container transition shadow-sm hover:shadow-md">
+                  <div className="w-12 h-12 bg-white border border-black/10 flex items-center justify-center rounded-lg sm:rounded-xl lg:rounded-none text-primary-container mb-6 shadow-sm">
                     <span className="material-symbols-outlined text-2xl">medical_services</span>
                   </div>
-                  <h3 className="font-headline-md text-xl font-bold text-pure-black mb-2">
+                  <h3 className="font-headline-md text-lg sm:text-xl font-bold text-pure-black mb-2">
                     Occupational Health
                   </h3>
                   <p className="font-body-md text-xs text-surface-variant leading-relaxed">
@@ -131,23 +131,23 @@ export default function HSEPage() {
                   </p>
                 </div>
 
-                <div className="p-8 bg-neutral-50 border border-black/10 rounded-sm hover:border-primary-container transition shadow-sm">
-                  <div className="w-12 h-12 bg-white border border-black/10 flex items-center justify-center rounded-sm text-primary-container mb-6">
+                <div className="p-6 sm:p-8 bg-neutral-50 border border-black/10 rounded-xl sm:rounded-2xl lg:rounded-none hover:border-primary-container transition shadow-sm hover:shadow-md">
+                  <div className="w-12 h-12 bg-white border border-black/10 flex items-center justify-center rounded-lg sm:rounded-xl lg:rounded-none text-primary-container mb-6 shadow-sm">
                     <span className="material-symbols-outlined text-2xl">warning</span>
                   </div>
-                  <h3 className="font-headline-md text-xl font-bold text-pure-black mb-2">
-                    Process & Asset Safety
+                  <h3 className="font-headline-md text-lg sm:text-xl font-bold text-pure-black mb-2">
+                    Process &amp; Asset Safety
                   </h3>
                   <p className="font-body-md text-xs text-surface-variant leading-relaxed">
                     Real-time asset telemetry, acoustic leak detection, and computerized pipeline integrity monitoring to preempt structural failures.
                   </p>
                 </div>
 
-                <div className="p-8 bg-neutral-50 border border-black/10 rounded-sm hover:border-primary-container transition shadow-sm">
-                  <div className="w-12 h-12 bg-white border border-black/10 flex items-center justify-center rounded-sm text-primary-container mb-6">
+                <div className="p-6 sm:p-8 bg-neutral-50 border border-black/10 rounded-xl sm:rounded-2xl lg:rounded-none hover:border-primary-container transition shadow-sm hover:shadow-md">
+                  <div className="w-12 h-12 bg-white border border-black/10 flex items-center justify-center rounded-lg sm:rounded-xl lg:rounded-none text-primary-container mb-6 shadow-sm">
                     <span className="material-symbols-outlined text-2xl">eco</span>
                   </div>
-                  <h3 className="font-headline-md text-xl font-bold text-pure-black mb-2">
+                  <h3 className="font-headline-md text-lg sm:text-xl font-bold text-pure-black mb-2">
                     Environmental Care
                   </h3>
                   <p className="font-body-md text-xs text-surface-variant leading-relaxed">
@@ -155,11 +155,11 @@ export default function HSEPage() {
                   </p>
                 </div>
 
-                <div className="p-8 bg-neutral-50 border border-black/10 rounded-sm hover:border-primary-container transition shadow-sm">
-                  <div className="w-12 h-12 bg-white border border-black/10 flex items-center justify-center rounded-sm text-primary-container mb-6">
+                <div className="p-6 sm:p-8 bg-neutral-50 border border-black/10 rounded-xl sm:rounded-2xl lg:rounded-none hover:border-primary-container transition shadow-sm hover:shadow-md">
+                  <div className="w-12 h-12 bg-white border border-black/10 flex items-center justify-center rounded-lg sm:rounded-xl lg:rounded-none text-primary-container mb-6 shadow-sm">
                     <span className="material-symbols-outlined text-2xl">emergency</span>
                   </div>
-                  <h3 className="font-headline-md text-xl font-bold text-pure-black mb-2">
+                  <h3 className="font-headline-md text-lg sm:text-xl font-bold text-pure-black mb-2">
                     Emergency Response
                   </h3>
                   <p className="font-body-md text-xs text-surface-variant leading-relaxed">
@@ -172,36 +172,36 @@ export default function HSEPage() {
         </section>
 
         {/* Section 2: Tulcan's 6 Golden Safety Rules */}
-        <section className="py-24 bg-neutral-50 border-b border-black/10">
-          <div className="max-w-7xl mx-auto px-container-margin">
-            <div className="max-w-3xl mb-16">
+        <section className="py-12 sm:py-16 lg:py-24 bg-neutral-50 border-b border-black/10">
+          <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-container-margin">
+            <div className="max-w-3xl mb-12 sm:mb-16">
               <div className="flex items-center space-x-2 text-primary-container text-xs font-bold uppercase tracking-widest mb-3">
                 <span className="w-2 h-2 rounded-full bg-primary-container"></span>
                 <span>Operational Directives</span>
               </div>
-              <h2 className="font-headline-md text-3xl lg:text-4xl font-extrabold text-pure-black tracking-tight">
+              <h2 className="font-headline-md text-2xl sm:text-3xl lg:text-4xl font-extrabold text-pure-black tracking-tight">
                 The 6 Golden Safety Rules
               </h2>
-              <p className="mt-4 text-surface-variant text-sm leading-relaxed">
+              <p className="mt-4 text-surface-variant text-xs sm:text-sm leading-relaxed">
                 Mandatory operational protocols enforced across all offshore platforms, drillships, flowstations, supply vessels, and corporate bases. Zero exceptions.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
               {goldenRules.map((rule) => (
                 <div
                   key={rule.number}
-                  className="bg-pure-white p-8 border border-black/10 rounded-sm hover:border-primary-container transition shadow-sm"
+                  className="bg-pure-white p-6 sm:p-8 border border-black/10 rounded-xl sm:rounded-2xl lg:rounded-none hover:border-primary-container transition shadow-sm hover:shadow-md"
                 >
                   <div className="flex items-center justify-between mb-6">
                     <span className="font-headline-md text-3xl font-black text-neutral-300">
                       {rule.number}
                     </span>
-                    <span className="text-[11px] px-2.5 py-1 bg-red-50 text-primary-container font-bold uppercase tracking-wider rounded">
+                    <span className="text-[11px] px-2.5 py-1 bg-red-50 text-primary-container font-bold uppercase tracking-wider rounded-full">
                       Mandatory
                     </span>
                   </div>
-                  <h3 className="font-headline-md text-lg font-bold text-pure-black mb-3">
+                  <h3 className="font-headline-md text-base sm:text-lg font-bold text-pure-black mb-3">
                     {rule.title}
                   </h3>
                   <p className="font-body-md text-xs text-surface-variant leading-relaxed">

@@ -125,18 +125,18 @@ export default function NewsPage() {
     <div className="bg-pure-white text-[#191614] antialiased min-h-screen">
       <Navbar />
 
-      <main className="pt-[88px] pb-section-v-desktop px-container-margin max-w-7xl mx-auto w-full">
+      <main className="pt-[88px] pb-12 sm:pb-16 md:pb-section-v-desktop px-3 sm:px-6 lg:px-container-margin max-w-7xl mx-auto w-full">
         {/* Header Section */}
-        <header className="py-20 border-b border-black/10 mb-16 relative overflow-hidden">
+        <header className="py-12 sm:py-16 md:py-20 border-b border-black/10 mb-8 sm:mb-16 relative overflow-hidden">
           <div className="relative z-10 grid grid-cols-12 gap-grid-gutter">
             <div className="col-span-12 md:col-span-8">
-              <p className="font-label-technical text-xs text-primary-container mb-4 uppercase tracking-widest font-semibold">
+              <p className="font-label-technical text-xs text-primary-container mb-2 sm:mb-4 uppercase tracking-widest font-semibold">
                 Corporate Intelligence & Dispatches
               </p>
-              <h1 className="font-headline-xl text-4xl md:text-6xl lg:text-7xl text-pure-black mb-6 font-extrabold tracking-tight">
+              <h1 className="font-headline-xl text-3xl sm:text-5xl md:text-6xl lg:text-7xl text-pure-black mb-3 sm:mb-6 font-extrabold tracking-tight">
                 News & Insights.
               </h1>
-              <p className="font-body-lg text-surface-variant max-w-2xl text-base leading-relaxed">
+              <p className="font-body-lg text-surface-variant max-w-2xl text-xs sm:text-base leading-relaxed">
                 Authoritative updates on our offshore and onshore operations, technology deployments, and community stewardship across Nigeria.
               </p>
             </div>
@@ -145,36 +145,36 @@ export default function NewsPage() {
 
         {/* Featured Story */}
         {featured && (
-          <section className="mb-20">
+          <section className="mb-12 sm:mb-20">
             <div
               onClick={() => setSelectedArticle(featured)}
-              className="grid grid-cols-12 gap-grid-gutter group cursor-pointer relative bg-neutral-50 border border-black/10 p-4 md:p-8 rounded"
+              className="grid grid-cols-12 gap-4 sm:gap-grid-gutter group cursor-pointer relative bg-neutral-50 border border-black/10 p-3 sm:p-5 md:p-8 rounded-xl sm:rounded-2xl lg:rounded-none hover:border-primary-container hover:shadow-md lg:hover:shadow-none transition-all duration-300"
             >
-              <div className="col-span-12 md:col-span-7 h-[420px] md:h-[500px] relative overflow-hidden border border-black/10 rounded-sm">
+              <div className="col-span-12 md:col-span-7 h-[260px] sm:h-[360px] md:h-[500px] relative overflow-hidden border border-black/10 rounded-lg sm:rounded-xl lg:rounded-none">
                 <div
                   className="w-full h-full bg-cover bg-center transition-transform duration-700 group-hover:scale-105 filter contrast-110"
                   style={{ backgroundImage: `url('${featured.image}')` }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-pure-black/80 via-transparent to-transparent"></div>
-                <div className="absolute top-6 right-6 flex flex-col items-end gap-1 font-label-technical text-xs text-pure-white z-10 bg-pure-black/70 px-3 py-1.5 border border-white/20">
+                <div className="absolute top-3 sm:top-6 right-3 sm:right-6 flex flex-col items-end gap-1 font-label-technical text-[10px] sm:text-xs text-pure-white z-10 bg-pure-black/70 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded border border-white/20">
                   <span>{featured.loc}</span>
-                  <span className="text-green-400">STATUS: ACTIVE</span>
+                  <span className="text-green-400 font-semibold">STATUS: ACTIVE</span>
                 </div>
               </div>
 
-              <div className="col-span-12 md:col-span-5 flex flex-col justify-center py-4 md:pl-6">
-                <div className="flex items-center gap-4 mb-4">
-                  <span className="font-label-technical text-xs text-primary-container px-3 py-1 border border-primary-container/30 bg-primary-container/5 font-bold uppercase">
+              <div className="col-span-12 md:col-span-5 flex flex-col justify-center py-2 sm:py-4 md:pl-6">
+                <div className="flex items-center gap-3 sm:gap-4 mb-2 sm:mb-4">
+                  <span className="font-label-technical text-[10px] sm:text-xs text-primary-container px-2.5 sm:px-3 py-0.5 sm:py-1 border border-primary-container/30 bg-primary-container/5 rounded font-bold uppercase">
                     {featured.category}
                   </span>
-                  <span className="font-label-technical text-xs text-surface-variant">
+                  <span className="font-label-technical text-[10px] sm:text-xs text-surface-variant font-semibold">
                     {featured.date}
                   </span>
                 </div>
-                <h2 className="font-headline-lg text-2xl md:text-3xl font-bold text-pure-black mb-4 group-hover:text-primary-container transition-colors duration-300 leading-snug">
+                <h2 className="font-headline-lg text-lg sm:text-2xl md:text-3xl font-bold text-pure-black mb-2 sm:mb-4 group-hover:text-primary-container transition-colors duration-300 leading-snug">
                   {featured.title}
                 </h2>
-                <p className="font-body-md text-surface-variant text-sm mb-6 leading-relaxed">
+                <p className="font-body-md text-surface-variant text-xs sm:text-sm mb-4 sm:mb-6 leading-relaxed">
                   {featured.summary}
                 </p>
                 <div className="flex items-center gap-2 text-primary-container font-label-technical text-xs uppercase tracking-wider font-bold group-hover:gap-4 transition-all">
@@ -188,16 +188,16 @@ export default function NewsPage() {
 
         {/* Filter Tabs & Grid */}
         <section>
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end border-b border-black/10 pb-4 mb-10 gap-4">
-            <h3 className="font-headline-md text-2xl font-bold text-pure-black">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end border-b border-black/10 pb-3 sm:pb-4 mb-6 sm:mb-10 gap-3 sm:gap-4">
+            <h3 className="font-headline-md text-xl sm:text-2xl font-bold text-pure-black">
               All Publications ({filteredArticles.length})
             </h3>
-            <div className="flex gap-4 font-label-technical text-xs overflow-x-auto w-full sm:w-auto pb-2 sm:pb-0">
+            <div className="flex gap-3 sm:gap-4 font-label-technical text-xs overflow-x-auto w-full sm:w-auto pb-2 sm:pb-0">
               {["ALL", "OPERATIONS", "ESG", "TECHNOLOGY", "CORPORATE"].map((cat) => (
                 <button
                   key={cat}
                   onClick={() => setActiveCategory(cat)}
-                  className={`pb-1 font-semibold uppercase tracking-wider transition-colors ${
+                  className={`pb-1 font-semibold uppercase tracking-wider transition-colors whitespace-nowrap ${
                     activeCategory === cat
                       ? "text-primary-container border-b-2 border-primary-container font-bold"
                       : "text-surface-variant hover:text-pure-black"
@@ -209,36 +209,36 @@ export default function NewsPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
             {filteredArticles.map((article) => (
               <article
                 key={article.id}
                 onClick={() => setSelectedArticle(article)}
-                className="group cursor-pointer border border-black/10 p-6 bg-pure-white hover:border-primary-container transition-all duration-300 flex flex-col justify-between"
+                className="group cursor-pointer border border-black/10 p-4 sm:p-6 bg-pure-white rounded-xl sm:rounded-2xl lg:rounded-none hover:border-primary-container hover:shadow-md lg:hover:shadow-none transition-all duration-300 flex flex-col justify-between"
               >
                 <div>
-                  <div className="aspect-video bg-neutral-100 overflow-hidden mb-5 relative border border-black/10 rounded-sm">
+                  <div className="aspect-video bg-neutral-100 overflow-hidden mb-4 sm:mb-5 relative border border-black/10 rounded-lg sm:rounded-xl lg:rounded-sm">
                     <div
                       className="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-500"
                       style={{ backgroundImage: `url('${article.image}')` }}
                     />
                   </div>
                   <div className="flex items-center justify-between mb-2">
-                    <span className="font-label-technical text-[11px] text-primary-container font-bold uppercase">
+                    <span className="font-label-technical text-[10px] sm:text-[11px] text-primary-container font-bold uppercase">
                       {article.category}
                     </span>
-                    <span className="font-label-technical text-[11px] text-surface-variant">
+                    <span className="font-label-technical text-[10px] sm:text-[11px] text-surface-variant font-semibold">
                       {article.date}
                     </span>
                   </div>
-                  <h4 className="font-headline-md text-xl font-bold text-pure-black mb-3 group-hover:text-primary-container transition-colors line-clamp-2 leading-snug">
+                  <h4 className="font-headline-md text-base sm:text-xl font-bold text-pure-black mb-2 sm:mb-3 group-hover:text-primary-container transition-colors line-clamp-2 leading-snug">
                     {article.title}
                   </h4>
-                  <p className="font-body-md text-surface-variant text-sm mb-4 line-clamp-3 leading-relaxed">
+                  <p className="font-body-md text-surface-variant text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-3 leading-relaxed">
                     {article.summary}
                   </p>
                 </div>
-                <div className="pt-4 border-t border-black/5 flex items-center justify-between font-label-technical text-xs text-primary-container font-bold">
+                <div className="pt-3 sm:pt-4 border-t border-black/5 flex items-center justify-between font-label-technical text-xs text-primary-container font-bold">
                   <span>EXPAND STORY</span>
                   <span className="material-symbols-outlined text-sm">chevron_right</span>
                 </div>
@@ -250,47 +250,47 @@ export default function NewsPage() {
 
       {/* Article Detail Modal */}
       {selectedArticle && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-pure-white border border-black/20 w-full max-w-3xl max-h-[90vh] overflow-y-auto p-6 md:p-8 rounded-sm shadow-2xl animate-scaleUp">
-            <div className="flex justify-between items-start mb-6">
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+          <div className="bg-pure-white border border-black/20 w-full max-w-3xl max-h-[90vh] overflow-y-auto p-5 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl lg:rounded-sm shadow-2xl animate-scaleUp">
+            <div className="flex justify-between items-start mb-4 sm:mb-6">
               <div>
                 <span className="text-xs font-label-technical uppercase tracking-widest text-primary-container font-bold block mb-1">
                   {selectedArticle.category} • {selectedArticle.date}
                 </span>
-                <h2 className="font-headline-md text-2xl md:text-3xl font-bold text-pure-black leading-tight">
+                <h2 className="font-headline-md text-xl sm:text-2xl md:text-3xl font-bold text-pure-black leading-tight">
                   {selectedArticle.title}
                 </h2>
               </div>
               <button
                 onClick={() => setSelectedArticle(null)}
-                className="text-neutral-500 hover:text-black p-2 text-xl ml-4"
+                className="text-neutral-500 hover:text-black p-1 sm:p-2 text-xl ml-2 sm:ml-4"
               >
                 ✕
               </button>
             </div>
 
-            <div className="aspect-video w-full mb-6 overflow-hidden rounded border border-black/10 relative">
+            <div className="aspect-video w-full mb-4 sm:mb-6 overflow-hidden rounded-lg sm:rounded-xl border border-black/10 relative">
               <img
                 src={selectedArticle.image}
                 alt={selectedArticle.title}
                 className="w-full h-full object-cover"
               />
-              <div className="absolute top-3 right-3 bg-black/70 text-white text-xs px-2.5 py-1 font-label-technical border border-white/20">
+              <div className="absolute top-3 right-3 bg-black/70 text-white text-[10px] sm:text-xs px-2.5 py-1 font-label-technical rounded border border-white/20 font-semibold">
                 {selectedArticle.loc}
               </div>
             </div>
 
-            <div className="prose max-w-none font-body-md text-surface-variant text-sm leading-relaxed whitespace-pre-line border-b border-black/10 pb-6 mb-6">
+            <div className="prose max-w-none font-body-md text-surface-variant text-xs sm:text-sm leading-relaxed whitespace-pre-line border-b border-black/10 pb-4 sm:pb-6 mb-4 sm:mb-6">
               {selectedArticle.content}
             </div>
 
-            <div className="flex justify-between items-center">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
               <span className="font-label-technical text-xs text-surface-variant">
                 Tulcan Energy Exploration & Production Company Limited
               </span>
               <button
                 onClick={() => setSelectedArticle(null)}
-                className="px-5 py-2.5 bg-primary-container text-white text-xs font-label-technical uppercase tracking-wider rounded-sm hover:brightness-110"
+                className="px-5 py-2.5 bg-primary-container text-white text-xs font-label-technical uppercase tracking-wider rounded hover:brightness-110 self-end sm:self-auto"
               >
                 Close Story
               </button>
