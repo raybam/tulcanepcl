@@ -802,14 +802,6 @@ export default function AdminDashboard() {
               <span className="text-neutral-500 text-[10px]">{stats.totalPartners || partners.length}</span>
             </button>
           </div>
-
-          <div className="p-3 bg-neutral-900/60 border border-neutral-800 rounded text-xs text-neutral-400">
-            <span className="text-green-400 flex items-center gap-1.5 font-label-technical uppercase tracking-wider text-[10px] mb-1 font-semibold">
-              <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-ping"></span>
-              Neon DB Connected
-            </span>
-            <p className="text-[11px] text-neutral-500">PostgreSQL (ancient-sun)</p>
-          </div>
         </aside>
 
         {/* Center Canvas */}
