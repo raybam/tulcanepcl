@@ -8,6 +8,7 @@ export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState<
     "overview" | "inquiries" | "applications" | "blogs" | "teams" | "partners"
   >("overview");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({
@@ -515,12 +516,12 @@ export default function AdminDashboard() {
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-primary/10 blur-[120px] rounded-full pointer-events-none"></div>
 
         {/* Top Header */}
-        <header className="h-16 border-b border-neutral-800/80 px-8 flex items-center justify-between z-10">
+        <header className="h-16 border-b border-neutral-800/80 px-4 sm:px-8 flex items-center justify-between z-10">
           <Link href="/" className="hover:opacity-90 transition-opacity">
             <img
               src="/images/logo-white.png"
               alt="Tulcan Energy"
-              className="h-8 w-auto object-contain"
+              className="h-7 sm:h-8 w-auto object-contain"
             />
           </Link>
           <Link
@@ -528,13 +529,13 @@ export default function AdminDashboard() {
             className="text-xs font-label-technical text-neutral-400 hover:text-white uppercase tracking-wider flex items-center gap-1.5 transition-colors"
           >
             <span className="material-symbols-outlined text-sm">arrow_back</span>
-            Public Site
+            <span className="hidden sm:inline">Public Site</span>
           </Link>
         </header>
 
         {/* Center Login Box */}
-        <main className="flex-1 flex items-center justify-center p-6 z-10">
-          <div className="w-full max-w-md bg-neutral-950/90 border border-neutral-800/90 backdrop-blur-xl p-8 rounded-sm shadow-2xl animate-scaleUp relative">
+        <main className="flex-1 flex items-center justify-center p-4 sm:p-6 z-10">
+          <div className="w-full max-w-md bg-neutral-950/90 border border-neutral-800/90 backdrop-blur-xl p-5 sm:p-8 rounded-sm shadow-2xl animate-scaleUp relative">
             <div className="border-b border-neutral-800 pb-6 mb-6 text-center">
               <div className="inline-flex items-center gap-2 px-3 py-1 bg-red-950/40 border border-red-800/40 rounded text-[11px] font-label-technical uppercase tracking-widest text-red-400 font-bold mb-3">
                 <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span>
@@ -650,26 +651,38 @@ export default function AdminDashboard() {
   return (
     <div className="min-h-screen bg-neutral-900 text-neutral-100 flex flex-col font-body-md antialiased">
       {/* Admin Top Header */}
-      <header className="h-16 bg-black border-b border-neutral-800 px-6 flex items-center justify-between z-20">
-        <div className="flex items-center gap-4">
+      <header className="h-16 bg-black border-b border-neutral-800 px-4 sm:px-6 flex items-center justify-between z-20 sticky top-0">
+        <div className="flex items-center gap-3 sm:gap-4">
+          {/* Mobile Menu Toggle Button */}
+          <button
+            type="button"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden text-neutral-400 hover:text-white p-1.5 -ml-1 rounded hover:bg-neutral-800 transition-colors flex items-center justify-center"
+            aria-label="Toggle navigation drawer"
+          >
+            <span className="material-symbols-outlined text-2xl">
+              {mobileMenuOpen ? "close" : "menu"}
+            </span>
+          </button>
+
           <Link
             href="/"
-            className="flex items-center gap-2 hover:opacity-90 transition-opacity"
+            className="flex items-center gap-2 hover:opacity-90 transition-opacity shrink-0"
           >
             <img
               src="/images/logo-white.png"
               alt="Tulcan Energy"
-              className="h-8 w-auto object-contain"
+              className="h-7 sm:h-8 w-auto object-contain"
             />
           </Link>
-          <span className="text-xs bg-primary-container/20 text-primary border border-primary-container/40 px-2 py-0.5 rounded font-label-technical uppercase tracking-wider">
+          <span className="hidden xs:inline-block text-[11px] bg-primary-container/20 text-primary border border-primary-container/40 px-2 py-0.5 rounded font-label-technical uppercase tracking-wider">
             Admin CMS
           </span>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 sm:gap-4">
           {adminUser && (
-            <div className="hidden sm:flex items-center gap-2 text-xs bg-neutral-900 border border-neutral-800 px-3 py-1.5 rounded">
+            <div className="hidden lg:flex items-center gap-2 text-xs bg-neutral-900 border border-neutral-800 px-3 py-1.5 rounded">
               <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
               <span className="text-neutral-200 font-semibold">{adminUser.name}</span>
               <span className="text-neutral-500 text-[11px]">({adminUser.email})</span>
@@ -681,38 +694,63 @@ export default function AdminDashboard() {
             title="Refresh Data"
             className="text-neutral-400 hover:text-white text-xs font-label-technical flex items-center gap-1.5 p-2 rounded hover:bg-neutral-800 transition-colors"
           >
-            <span className="material-symbols-outlined text-sm">refresh</span>
-            Refresh
+            <span className="material-symbols-outlined text-base">refresh</span>
+            <span className="hidden sm:inline">Refresh</span>
           </button>
           <Link
             href="/"
-            className="text-xs font-label-technical text-neutral-300 hover:text-white uppercase tracking-wider border border-neutral-700 px-3 py-1.5 rounded hover:border-neutral-500 transition-colors flex items-center gap-1.5"
+            className="text-xs font-label-technical text-neutral-300 hover:text-white uppercase tracking-wider border border-neutral-700 p-2 sm:px-3 sm:py-1.5 rounded hover:border-neutral-500 transition-colors flex items-center gap-1.5"
+            title="Open Public Website"
           >
-            <span className="material-symbols-outlined text-sm">open_in_new</span>
-            Public Site
+            <span className="material-symbols-outlined text-base">open_in_new</span>
+            <span className="hidden sm:inline">Public Site</span>
           </Link>
           <button
             onClick={handleLogout}
             title="Sign Out of Admin CMS"
-            className="text-xs font-label-technical text-red-400 hover:text-red-300 uppercase tracking-wider border border-red-900/50 hover:border-red-500 bg-red-950/20 px-3 py-1.5 rounded transition-colors flex items-center gap-1.5"
+            className="text-xs font-label-technical text-red-400 hover:text-red-300 uppercase tracking-wider border border-red-900/50 hover:border-red-500 bg-red-950/20 p-2 sm:px-3 sm:py-1.5 rounded transition-colors flex items-center gap-1.5"
           >
-            <span className="material-symbols-outlined text-sm">logout</span>
-            Sign Out
+            <span className="material-symbols-outlined text-base">logout</span>
+            <span className="hidden sm:inline">Sign Out</span>
           </button>
         </div>
       </header>
 
+      {/* Mobile Drawer Backdrop */}
+      {mobileMenuOpen && (
+        <div
+          className="fixed inset-0 bg-black/75 backdrop-blur-sm z-30 md:hidden animate-fadeIn"
+          onClick={() => setMobileMenuOpen(false)}
+        />
+      )}
+
       {/* Main Layout Container */}
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex overflow-hidden relative">
         {/* Sidebar Navigation */}
-        <aside className="w-64 bg-neutral-950 border-r border-neutral-800 p-4 flex flex-col justify-between shrink-0">
+        <aside
+          className={`fixed inset-y-0 left-0 z-40 w-72 bg-neutral-950 border-r border-neutral-800 p-4 flex flex-col justify-between shrink-0 transform transition-transform duration-200 ease-in-out md:static md:w-64 md:translate-x-0 ${
+            mobileMenuOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full md:translate-x-0"
+          }`}
+        >
           <div className="space-y-1">
-            <div className="px-3 py-2 text-[11px] font-label-technical uppercase tracking-widest text-neutral-500 font-bold">
-              Management Portal
+            <div className="flex items-center justify-between px-3 py-2 border-b border-neutral-800/80 mb-2 md:border-none md:mb-0">
+              <span className="text-[11px] font-label-technical uppercase tracking-widest text-neutral-500 font-bold">
+                Management Portal
+              </span>
+              <button
+                type="button"
+                onClick={() => setMobileMenuOpen(false)}
+                className="md:hidden text-neutral-400 hover:text-white p-1 rounded hover:bg-neutral-900"
+              >
+                <span className="material-symbols-outlined text-lg">close</span>
+              </button>
             </div>
 
             <button
-              onClick={() => setActiveTab("overview")}
+              onClick={() => {
+                setActiveTab("overview");
+                setMobileMenuOpen(false);
+              }}
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded text-xs font-label-technical uppercase tracking-wider transition-colors ${
                 activeTab === "overview"
                   ? "bg-primary-container text-white font-bold"
@@ -724,7 +762,10 @@ export default function AdminDashboard() {
             </button>
 
             <button
-              onClick={() => setActiveTab("inquiries")}
+              onClick={() => {
+                setActiveTab("inquiries");
+                setMobileMenuOpen(false);
+              }}
               className={`w-full flex items-center justify-between px-3 py-2.5 rounded text-xs font-label-technical uppercase tracking-wider transition-colors ${
                 activeTab === "inquiries"
                   ? "bg-primary-container text-white font-bold"
@@ -743,7 +784,10 @@ export default function AdminDashboard() {
             </button>
 
             <button
-              onClick={() => setActiveTab("applications")}
+              onClick={() => {
+                setActiveTab("applications");
+                setMobileMenuOpen(false);
+              }}
               className={`w-full flex items-center justify-between px-3 py-2.5 rounded text-xs font-label-technical uppercase tracking-wider transition-colors ${
                 activeTab === "applications"
                   ? "bg-primary-container text-white font-bold"
@@ -758,7 +802,10 @@ export default function AdminDashboard() {
             </button>
 
             <button
-              onClick={() => setActiveTab("blogs")}
+              onClick={() => {
+                setActiveTab("blogs");
+                setMobileMenuOpen(false);
+              }}
               className={`w-full flex items-center justify-between px-3 py-2.5 rounded text-xs font-label-technical uppercase tracking-wider transition-colors ${
                 activeTab === "blogs"
                   ? "bg-primary-container text-white font-bold"
@@ -773,7 +820,10 @@ export default function AdminDashboard() {
             </button>
 
             <button
-              onClick={() => setActiveTab("teams")}
+              onClick={() => {
+                setActiveTab("teams");
+                setMobileMenuOpen(false);
+              }}
               className={`w-full flex items-center justify-between px-3 py-2.5 rounded text-xs font-label-technical uppercase tracking-wider transition-colors ${
                 activeTab === "teams"
                   ? "bg-primary-container text-white font-bold"
@@ -788,7 +838,10 @@ export default function AdminDashboard() {
             </button>
 
             <button
-              onClick={() => setActiveTab("partners")}
+              onClick={() => {
+                setActiveTab("partners");
+                setMobileMenuOpen(false);
+              }}
               className={`w-full flex items-center justify-between px-3 py-2.5 rounded text-xs font-label-technical uppercase tracking-wider transition-colors ${
                 activeTab === "partners"
                   ? "bg-primary-container text-white font-bold"
@@ -802,26 +855,83 @@ export default function AdminDashboard() {
               <span className="text-neutral-500 text-[10px]">{stats.totalPartners || partners.length}</span>
             </button>
           </div>
+
+          {/* User profile info & mobile quick actions */}
+          <div className="pt-4 border-t border-neutral-800/80 space-y-3">
+            {adminUser && (
+              <div className="px-3 py-2 bg-neutral-900/60 border border-neutral-800 rounded">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+                  <span className="text-xs text-neutral-200 font-semibold truncate">{adminUser.name}</span>
+                </div>
+                <div className="text-[10px] text-neutral-400 truncate">{adminUser.email}</div>
+              </div>
+            )}
+            <button
+              onClick={handleLogout}
+              className="md:hidden w-full text-xs font-label-technical text-red-400 hover:text-red-300 uppercase tracking-wider border border-red-900/40 bg-red-950/20 px-3 py-2 rounded transition-colors flex items-center justify-center gap-2"
+            >
+              <span className="material-symbols-outlined text-sm">logout</span>
+              Sign Out
+            </button>
+          </div>
         </aside>
 
         {/* Center Canvas */}
-        <main className="flex-1 p-8 overflow-y-auto">
-          {actionMessage && (
-            <div className="mb-6 p-4 bg-primary-container/20 border border-primary-container text-primary text-xs rounded flex justify-between items-center">
-              <span>{actionMessage}</span>
-              <button onClick={() => setActionMessage("")} className="text-white hover:opacity-75">
-                ✕
+        <main className="flex-1 overflow-y-auto flex flex-col">
+          {/* Mobile Horizontal Quick Tab Bar */}
+          <div className="md:hidden flex items-center gap-2 px-4 py-2.5 bg-neutral-950/95 border-b border-neutral-800 overflow-x-auto no-scrollbar shrink-0 sticky top-0 z-10 backdrop-blur">
+            {[
+              { id: "overview", label: "Overview", icon: "dashboard", count: 0 },
+              { id: "inquiries", label: "Inquiries", icon: "mail", count: stats.unreadInquiries },
+              { id: "applications", label: "Careers", icon: "badge", count: stats.totalApplications },
+              { id: "blogs", label: "Dispatches", icon: "article", count: stats.totalBlogs },
+              { id: "teams", label: "Teams", icon: "groups", count: stats.totalStaff },
+              { id: "partners", label: "Partners", icon: "corporate_fare", count: stats.totalPartners || partners.length },
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id as any)}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-label-technical uppercase whitespace-nowrap shrink-0 transition-colors ${
+                  activeTab === tab.id
+                    ? "bg-primary-container text-white font-bold shadow-sm"
+                    : "bg-neutral-900 text-neutral-400 hover:text-white border border-neutral-800"
+                }`}
+              >
+                <span className="material-symbols-outlined text-sm">{tab.icon}</span>
+                <span>{tab.label}</span>
+                {tab.count > 0 && (
+                  <span
+                    className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
+                      tab.id === "inquiries"
+                        ? "bg-red-500 text-white"
+                        : "bg-neutral-800 text-neutral-300"
+                    }`}
+                  >
+                    {tab.count}
+                  </span>
+                )}
               </button>
-            </div>
-          )}
+            ))}
+          </div>
 
-          {/* TAB 1: OVERVIEW */}
-          {activeTab === "overview" && (
-            <div className="space-y-8 animate-fadeIn">
-              <div>
-                <h1 className="font-headline-md text-3xl font-bold text-white mb-2">
-                  System Overview
-                </h1>
+          <div className="p-4 sm:p-6 lg:p-8 flex-1">
+            {actionMessage && (
+              <div className="mb-6 p-4 bg-primary-container/20 border border-primary-container text-primary text-xs rounded flex justify-between items-center">
+                <span>{actionMessage}</span>
+                <button onClick={() => setActionMessage("")} className="text-white hover:opacity-75">
+                  ✕
+                </button>
+              </div>
+            )}
+
+            {/* TAB 1: OVERVIEW */}
+            {activeTab === "overview" && (
+              <div className="space-y-8 animate-fadeIn">
+                <div>
+                  <h1 className="font-headline-md text-2xl sm:text-3xl font-bold text-white mb-2">
+                    System Overview
+                  </h1>
                 <p className="text-sm text-neutral-400">
                   Real-time activity and content telemetry from Tulcan Energy web platform.
                 </p>
@@ -1119,9 +1229,9 @@ export default function AdminDashboard() {
           {/* TAB 2: INQUIRIES */}
           {activeTab === "inquiries" && (
             <div className="space-y-6 animate-fadeIn">
-              <div className="flex justify-between items-center">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <div>
-                  <h1 className="font-headline-md text-3xl font-bold text-white">
+                  <h1 className="font-headline-md text-2xl sm:text-3xl font-bold text-white">
                     Contact Inquiries
                   </h1>
                   <p className="text-xs text-neutral-400 mt-1">
@@ -1131,7 +1241,8 @@ export default function AdminDashboard() {
               </div>
 
               <div className="bg-neutral-950 border border-neutral-800 rounded overflow-hidden">
-                <table className="w-full text-left text-xs">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs min-w-[650px]">
                   <thead className="bg-neutral-900 text-neutral-400 font-label-technical uppercase tracking-wider border-b border-neutral-800">
                     <tr>
                       <th className="p-4">Sender</th>
@@ -1199,6 +1310,7 @@ export default function AdminDashboard() {
                     )}
                   </tbody>
                 </table>
+                </div>
               </div>
             </div>
           )}
@@ -1207,7 +1319,7 @@ export default function AdminDashboard() {
           {activeTab === "applications" && (
             <div className="space-y-6 animate-fadeIn">
               <div>
-                <h1 className="font-headline-md text-3xl font-bold text-white">
+                <h1 className="font-headline-md text-2xl sm:text-3xl font-bold text-white">
                   Job Applications
                 </h1>
                 <p className="text-xs text-neutral-400 mt-1">
@@ -1216,7 +1328,8 @@ export default function AdminDashboard() {
               </div>
 
               <div className="bg-neutral-950 border border-neutral-800 rounded overflow-hidden">
-                <table className="w-full text-left text-xs">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs min-w-[700px]">
                   <thead className="bg-neutral-900 text-neutral-400 font-label-technical uppercase tracking-wider border-b border-neutral-800">
                     <tr>
                       <th className="p-4">Candidate</th>
@@ -1300,6 +1413,7 @@ export default function AdminDashboard() {
                     )}
                   </tbody>
                 </table>
+                </div>
               </div>
             </div>
           )}
@@ -1307,9 +1421,9 @@ export default function AdminDashboard() {
           {/* TAB 4: BLOGS / NEWS CMS */}
           {activeTab === "blogs" && (
             <div className="space-y-6 animate-fadeIn">
-              <div className="flex justify-between items-center">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                  <h1 className="font-headline-md text-3xl font-bold text-white">
+                  <h1 className="font-headline-md text-2xl sm:text-3xl font-bold text-white">
                     Blog Posts & Press Releases
                   </h1>
                   <p className="text-xs text-neutral-400 mt-1">
@@ -1318,7 +1432,7 @@ export default function AdminDashboard() {
                 </div>
                 <button
                   onClick={() => setActiveModal("addBlog")}
-                  className="bg-primary-container text-white px-4 py-2 text-xs font-label-technical uppercase tracking-wider rounded flex items-center gap-1.5 hover:brightness-110"
+                  className="bg-primary-container text-white px-4 py-2 text-xs font-label-technical uppercase tracking-wider rounded flex items-center gap-1.5 hover:brightness-110 self-start sm:self-auto shrink-0"
                 >
                   <span className="material-symbols-outlined text-sm">add</span>
                   Create Article
@@ -1377,16 +1491,16 @@ export default function AdminDashboard() {
           {/* TAB 5: OUR TEAMS (Leadership & Operating Committee) */}
           {activeTab === "teams" && (
             <div className="space-y-6 animate-fadeIn">
-              <div className="flex justify-between items-center">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                  <h1 className="font-headline-md text-3xl font-bold text-white">Our Teams</h1>
+                  <h1 className="font-headline-md text-2xl sm:text-3xl font-bold text-white">Our Teams</h1>
                   <p className="text-xs text-neutral-400 mt-1">
                     Manage Board Members, Executive Leadership, and Operating Committee.
                   </p>
                 </div>
                 <button
                   onClick={() => setActiveModal("addTeam")}
-                  className="bg-primary-container text-white px-4 py-2 text-xs font-label-technical uppercase tracking-wider rounded flex items-center gap-1.5 hover:brightness-110"
+                  className="bg-primary-container text-white px-4 py-2 text-xs font-label-technical uppercase tracking-wider rounded flex items-center gap-1.5 hover:brightness-110 self-start sm:self-auto shrink-0"
                 >
                   <span className="material-symbols-outlined text-sm">person_add</span>
                   Add Team Member
@@ -1679,13 +1793,14 @@ export default function AdminDashboard() {
               </div>
             </div>
           )}
+          </div>
         </main>
       </div>
 
       {/* MODAL: ADD BLOG POST */}
       {activeModal === "addBlog" && (
-        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-neutral-900 border border-neutral-700 w-full max-w-xl p-6 rounded shadow-2xl animate-scaleUp">
+        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+          <div className="bg-neutral-900 border border-neutral-700 w-full max-w-xl p-4 sm:p-6 rounded shadow-2xl animate-scaleUp max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-4">
               <h3 className="font-headline-md text-xl font-bold text-white">Create Blog Article</h3>
               <button
@@ -1834,8 +1949,8 @@ export default function AdminDashboard() {
 
       {/* MODAL: ADD TEAM MEMBER */}
       {activeModal === "addTeam" && (
-        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-neutral-900 border border-neutral-700 w-full max-w-lg p-6 rounded shadow-2xl animate-scaleUp">
+        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+          <div className="bg-neutral-900 border border-neutral-700 w-full max-w-lg p-4 sm:p-6 rounded shadow-2xl animate-scaleUp max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-4">
               <h3 className="font-headline-md text-xl font-bold text-white">Add Team Member</h3>
               <button
@@ -2000,8 +2115,8 @@ export default function AdminDashboard() {
 
       {/* MODAL: EDIT TEAM MEMBER */}
       {activeModal === "editTeam" && (
-        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-neutral-900 border border-neutral-700 w-full max-w-lg p-6 rounded shadow-2xl animate-scaleUp">
+        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+          <div className="bg-neutral-900 border border-neutral-700 w-full max-w-lg p-4 sm:p-6 rounded shadow-2xl animate-scaleUp max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-4">
               <div className="flex items-center gap-2">
                 <span className="px-2 py-0.5 rounded text-[10px] font-label-technical uppercase bg-primary-container/40 text-primary border border-primary/30">
@@ -2180,8 +2295,8 @@ export default function AdminDashboard() {
 
       {/* MODAL: VIEW INQUIRY */}
       {activeModal === "viewInquiry" && selectedInquiry && (
-        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-neutral-900 border border-neutral-700 w-full max-w-lg p-6 rounded shadow-2xl animate-scaleUp">
+        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+          <div className="bg-neutral-900 border border-neutral-700 w-full max-w-lg p-4 sm:p-6 rounded shadow-2xl animate-scaleUp max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-4">
               <span className="text-xs font-label-technical uppercase text-primary font-bold">
                 Inquiry Detail
@@ -2243,8 +2358,8 @@ export default function AdminDashboard() {
       )}
       {/* MODAL: ADD PARTNER */}
       {activeModal === "addPartner" && (
-        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-neutral-900 border border-neutral-700 w-full max-w-lg p-6 rounded shadow-2xl animate-scaleUp">
+        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+          <div className="bg-neutral-900 border border-neutral-700 w-full max-w-lg p-4 sm:p-6 rounded shadow-2xl animate-scaleUp max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-4">
               <h3 className="font-headline-md text-xl font-bold text-white">Add Technical Partner</h3>
               <button
@@ -2347,8 +2462,8 @@ export default function AdminDashboard() {
 
       {/* MODAL: EDIT PARTNER */}
       {activeModal === "editPartner" && (
-        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-neutral-900 border border-neutral-700 w-full max-w-lg p-6 rounded shadow-2xl animate-scaleUp">
+        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+          <div className="bg-neutral-900 border border-neutral-700 w-full max-w-lg p-4 sm:p-6 rounded shadow-2xl animate-scaleUp max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-4">
               <h3 className="font-headline-md text-xl font-bold text-white">Edit Technical Partner</h3>
               <button
