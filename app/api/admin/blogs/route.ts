@@ -67,18 +67,36 @@ export async function POST(req: Request) {
 export async function PATCH(req: Request) {
   try {
     const body = await req.json();
-    const { id, title, description, content, featuredImage, isPublished } = body;
+    const { id, title, slug, description, content, featuredImage, categoryName, isPublished } = body;
 
     if (!id) return NextResponse.json({ error: "ID is required" }, { status: 400 });
+
+    let categoryUpdate = {};
+    if (categoryName) {
+      let category = await prisma.blogCategory.findFirst({
+        where: { name: categoryName },
+      });
+      if (!category) {
+        category = await prisma.blogCategory.create({
+          data: {
+            name: categoryName,
+            slug: categoryName.toLowerCase().replace(/\s+/g, "-"),
+          },
+        });
+      }
+      categoryUpdate = { categoryId: category.id };
+    }
 
     const updated = await prisma.blog.update({
       where: { id },
       data: {
         ...(title && { title }),
+        ...(slug && { slug }),
         ...(description !== undefined && { description }),
         ...(content && { content }),
         ...(featuredImage !== undefined && { featuredImage }),
         ...(isPublished !== undefined && { isPublished }),
+        ...categoryUpdate,
       },
       include: { category: true },
     });

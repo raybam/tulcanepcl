@@ -28,12 +28,22 @@ export default function AdminDashboard() {
 
   // Selected item modal view
   const [activeModal, setActiveModal] = useState<
-    "addBlog" | "addTeam" | "editTeam" | "viewInquiry" | "addPartner" | "editPartner" | null
+    "addBlog" | "editBlog" | "addTeam" | "editTeam" | "viewInquiry" | "addPartner" | "editPartner" | null
   >(null);
   const [selectedInquiry, setSelectedInquiry] = useState<any | null>(null);
 
   // Form states
   const [blogForm, setBlogForm] = useState({
+    title: "",
+    categoryName: "Operations",
+    description: "",
+    featuredImage: "",
+    content: "",
+    isPublished: true,
+  });
+
+  const [editBlogForm, setEditBlogForm] = useState({
+    id: "",
     title: "",
     categoryName: "Operations",
     description: "",
@@ -113,7 +123,11 @@ export default function AdminDashboard() {
       const data = await res.json();
       if (res.ok && data.url) {
         if (type === "blog") {
-          setBlogForm((prev) => ({ ...prev, featuredImage: data.url }));
+          if (activeModal === "editBlog") {
+            setEditBlogForm((prev) => ({ ...prev, featuredImage: data.url }));
+          } else {
+            setBlogForm((prev) => ({ ...prev, featuredImage: data.url }));
+          }
           setActionMessage(`Article image uploaded successfully via ${data.provider}.`);
         } else if (type === "team") {
           if (activeModal === "editTeam") {
@@ -303,6 +317,40 @@ export default function AdminDashboard() {
       }
     } catch (err) {
       console.error(err);
+    }
+  };
+
+  const handleOpenEditBlog = (b: any) => {
+    setEditBlogForm({
+      id: b.id,
+      title: b.title || "",
+      categoryName: b.category?.name || "Operations",
+      description: b.description || "",
+      featuredImage: b.featuredImage || "",
+      content: b.content || "",
+      isPublished: b.isPublished ?? true,
+    });
+    setActiveModal("editBlog");
+  };
+
+  const handleUpdateBlog = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const res = await fetch(buildApiUrl("/api/admin/blogs"), {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(editBlogForm),
+      });
+      if (res.ok) {
+        setActiveModal(null);
+        setActionMessage("Blog post updated successfully.");
+        fetchData();
+      } else {
+        const data = await res.json();
+        alert(data.error || "Failed to update blog post");
+      }
+    } catch (err: any) {
+      alert("Error updating blog: " + err.message);
     }
   };
 
@@ -1475,12 +1523,23 @@ export default function AdminDashboard() {
                       >
                         {b.isPublished ? "PUBLISHED" : "DRAFT"}
                       </span>
-                      <button
-                        onClick={() => handleDeleteBlog(b.id)}
-                        className="text-red-400 hover:underline"
-                      >
-                        Delete
-                      </button>
+                      <div className="flex items-center gap-3">
+                        <button
+                          type="button"
+                          onClick={() => handleOpenEditBlog(b)}
+                          className="text-primary hover:underline flex items-center gap-1 font-label-technical uppercase tracking-wider text-[11px]"
+                        >
+                          <span className="material-symbols-outlined text-xs">edit</span>
+                          Edit
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteBlog(b.id)}
+                          className="text-red-400 hover:underline font-label-technical uppercase tracking-wider text-[11px]"
+                        >
+                          Delete
+                        </button>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -1941,6 +2000,156 @@ export default function AdminDashboard() {
                 className="w-full bg-primary-container text-white py-3 rounded font-label-technical uppercase tracking-wider hover:brightness-110"
               >
                 Save Article
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL: EDIT BLOG POST */}
+      {activeModal === "editBlog" && (
+        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+          <div className="bg-neutral-900 border border-neutral-700 w-full max-w-xl p-4 sm:p-6 rounded shadow-2xl animate-scaleUp max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="font-headline-md text-xl font-bold text-white">Edit Blog Article</h3>
+              <button
+                onClick={() => setActiveModal(null)}
+                className="text-neutral-400 hover:text-white"
+              >
+                ✕
+              </button>
+            </div>
+
+            <form onSubmit={handleUpdateBlog} className="space-y-4 text-xs">
+              <div>
+                <label className="block text-neutral-300 font-label-technical uppercase mb-1">
+                  Article Title *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={editBlogForm.title}
+                  onChange={(e) => setEditBlogForm({ ...editBlogForm, title: e.target.value })}
+                  placeholder="e.g. Phase II Drilling Commences at Tom Shot Bank"
+                  className="w-full bg-neutral-950 border border-neutral-700 p-2.5 rounded text-white outline-none focus:border-primary"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-neutral-300 font-label-technical uppercase mb-1">
+                    Category
+                  </label>
+                  <select
+                    value={editBlogForm.categoryName}
+                    onChange={(e) => setEditBlogForm({ ...editBlogForm, categoryName: e.target.value })}
+                    className="w-full bg-neutral-950 border border-neutral-700 p-2.5 rounded text-white outline-none focus:border-primary"
+                  >
+                    <option value="Operations">Operations</option>
+                    <option value="ESG">ESG & Sustainability</option>
+                    <option value="Technology">Technology</option>
+                    <option value="Corporate">Corporate</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-neutral-300 font-label-technical uppercase mb-1">
+                    Featured Image (Upload or URL)
+                  </label>
+                  <div className="flex items-center gap-3 mb-2">
+                    <input
+                      type="file"
+                      id="edit-blog-image-file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) handleFileUpload(file, "blog");
+                      }}
+                    />
+                    <label
+                      htmlFor="edit-blog-image-file"
+                      className={`flex items-center gap-1.5 px-3 py-2 rounded text-xs font-label-technical uppercase tracking-wider cursor-pointer border ${
+                        uploadingBlogImg
+                          ? "bg-neutral-800 text-neutral-400 border-neutral-700 cursor-not-allowed"
+                          : "bg-neutral-800 hover:bg-neutral-700 text-white border-neutral-600"
+                      }`}
+                    >
+                      <span className="material-symbols-outlined text-sm">
+                        {uploadingBlogImg ? "hourglass_top" : "cloud_upload"}
+                      </span>
+                      {uploadingBlogImg ? "Uploading..." : "Upload Image File"}
+                    </label>
+                    {editBlogForm.featuredImage && (
+                      <div className="flex items-center gap-2">
+                        <img
+                          src={editBlogForm.featuredImage}
+                          alt="Preview"
+                          className="w-8 h-8 object-cover rounded border border-neutral-700"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setEditBlogForm({ ...editBlogForm, featuredImage: "" })}
+                          className="text-red-400 hover:text-red-300 text-xs"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                  <input
+                    type="url"
+                    placeholder="Or enter image URL (https://...)"
+                    value={editBlogForm.featuredImage}
+                    onChange={(e) => setEditBlogForm({ ...editBlogForm, featuredImage: e.target.value })}
+                    className="w-full bg-neutral-950 border border-neutral-700 p-2.5 rounded text-white outline-none focus:border-primary"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-neutral-300 font-label-technical uppercase mb-1">
+                  Excerpt Summary
+                </label>
+                <input
+                  type="text"
+                  value={editBlogForm.description}
+                  onChange={(e) => setEditBlogForm({ ...editBlogForm, description: e.target.value })}
+                  placeholder="Short 1-2 sentence preview"
+                  className="w-full bg-neutral-950 border border-neutral-700 p-2.5 rounded text-white outline-none focus:border-primary"
+                />
+              </div>
+
+              <div>
+                <label className="block text-neutral-300 font-label-technical uppercase mb-1">
+                  Article Content *
+                </label>
+                <textarea
+                  required
+                  rows={6}
+                  value={editBlogForm.content}
+                  onChange={(e) => setEditBlogForm({ ...editBlogForm, content: e.target.value })}
+                  placeholder="Full text of the dispatch..."
+                  className="w-full bg-neutral-950 border border-neutral-700 p-2.5 rounded text-white outline-none focus:border-primary"
+                />
+              </div>
+
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="edit-pub"
+                  checked={editBlogForm.isPublished}
+                  onChange={(e) => setEditBlogForm({ ...editBlogForm, isPublished: e.target.checked })}
+                />
+                <label htmlFor="edit-pub" className="text-neutral-300 font-label-technical uppercase">
+                  Published
+                </label>
+              </div>
+
+              <button
+                type="submit"
+                className="w-full bg-primary-container text-white py-3 rounded font-label-technical uppercase tracking-wider hover:brightness-110"
+              >
+                Update Article
               </button>
             </form>
           </div>
