@@ -6,7 +6,7 @@ import { buildApiUrl } from "@/lib/api-config";
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState<
-    "overview" | "inquiries" | "applications" | "blogs" | "teams" | "partners"
+    "overview" | "inquiries" | "vacancies" | "applications" | "blogs" | "teams" | "partners"
   >("overview");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -14,6 +14,7 @@ export default function AdminDashboard() {
   const [stats, setStats] = useState({
     totalInquiries: 0,
     unreadInquiries: 0,
+    totalVacancies: 0,
     totalApplications: 0,
     totalBlogs: 0,
     totalStaff: 0,
@@ -21,6 +22,7 @@ export default function AdminDashboard() {
   });
 
   const [inquiries, setInquiries] = useState<any[]>([]);
+  const [vacancies, setVacancies] = useState<any[]>([]);
   const [applications, setApplications] = useState<any[]>([]);
   const [blogs, setBlogs] = useState<any[]>([]);
   const [teams, setTeams] = useState<any[]>([]);
@@ -28,7 +30,16 @@ export default function AdminDashboard() {
 
   // Selected item modal view
   const [activeModal, setActiveModal] = useState<
-    "addBlog" | "editBlog" | "addTeam" | "editTeam" | "viewInquiry" | "addPartner" | "editPartner" | null
+    | "addBlog"
+    | "editBlog"
+    | "addVacancy"
+    | "editVacancy"
+    | "addTeam"
+    | "editTeam"
+    | "viewInquiry"
+    | "addPartner"
+    | "editPartner"
+    | null
   >(null);
   const [selectedInquiry, setSelectedInquiry] = useState<any | null>(null);
 
@@ -50,6 +61,31 @@ export default function AdminDashboard() {
     featuredImage: "",
     content: "",
     isPublished: true,
+  });
+
+  const [vacancyForm, setVacancyForm] = useState({
+    title: "",
+    department: "Subsurface & Geosciences",
+    location: "Lagos / Offshore Akwa Ibom",
+    employmentType: "Full-Time",
+    workType: "Hybrid / Offshore Rotation",
+    salary: "",
+    description: "",
+    requirements: "",
+    isActive: true,
+  });
+
+  const [editVacancyForm, setEditVacancyForm] = useState({
+    id: "",
+    title: "",
+    department: "Subsurface & Geosciences",
+    location: "Lagos / Offshore Akwa Ibom",
+    employmentType: "Full-Time",
+    workType: "Hybrid / Offshore Rotation",
+    salary: "",
+    description: "",
+    requirements: "",
+    isActive: true,
   });
 
   const [teamForm, setTeamForm] = useState({
@@ -163,18 +199,20 @@ export default function AdminDashboard() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const [ovRes, inqRes, appRes, blogRes, teamRes, partnerRes] = await Promise.all([
+      const [ovRes, inqRes, vacRes, appRes, blogRes, teamRes, partnerRes] = await Promise.all([
         fetch(buildApiUrl("/api/admin/overview")),
         fetch(buildApiUrl("/api/admin/inquiries")),
+        fetch(buildApiUrl("/api/admin/careers")),
         fetch(buildApiUrl("/api/admin/applications")),
         fetch(buildApiUrl("/api/admin/blogs")),
         fetch(buildApiUrl("/api/admin/teams")),
         fetch(buildApiUrl("/api/admin/partners")),
       ]);
 
-      const [ovData, inqData, appData, blogData, teamData, partnerData] = await Promise.all([
+      const [ovData, inqData, vacData, appData, blogData, teamData, partnerData] = await Promise.all([
         ovRes.json(),
         inqRes.json(),
+        vacRes.json(),
         appRes.json(),
         blogRes.json(),
         teamRes.json(),
@@ -183,6 +221,10 @@ export default function AdminDashboard() {
 
       if (ovData.stats) setStats((prev) => ({ ...prev, ...ovData.stats }));
       if (inqData.inquiries) setInquiries(inqData.inquiries);
+      if (vacData.vacancies) {
+        setVacancies(vacData.vacancies);
+        setStats((prev) => ({ ...prev, totalVacancies: vacData.vacancies.length }));
+      }
       if (appData.applications) setApplications(appData.applications);
       if (blogData.blogs) setBlogs(blogData.blogs);
       if (teamData.staff) setTeams(teamData.staff);
@@ -292,6 +334,104 @@ export default function AdminDashboard() {
       body: JSON.stringify({ id, status }),
     });
     fetchData();
+  };
+
+  const handleCreateVacancy = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const res = await fetch(buildApiUrl("/api/admin/careers"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(vacancyForm),
+      });
+      if (res.ok) {
+        setActiveModal(null);
+        setVacancyForm({
+          title: "",
+          department: "Subsurface & Geosciences",
+          location: "Lagos / Offshore Akwa Ibom",
+          employmentType: "Full-Time",
+          workType: "Hybrid / Offshore Rotation",
+          salary: "",
+          description: "",
+          requirements: "",
+          isActive: true,
+        });
+        setActionMessage("Job vacancy created successfully and published to Careers page.");
+        fetchData();
+      } else {
+        const data = await res.json();
+        alert(data.error || "Failed to create vacancy");
+      }
+    } catch (err: any) {
+      alert("Error: " + err.message);
+    }
+  };
+
+  const handleOpenEditVacancy = (v: any) => {
+    setEditVacancyForm({
+      id: v.id,
+      title: v.title || "",
+      department: v.department || "Subsurface & Geosciences",
+      location: v.location || "Lagos / Offshore Akwa Ibom",
+      employmentType: v.employmentType || "Full-Time",
+      workType: v.workType || "Hybrid / Offshore Rotation",
+      salary: v.salary || "",
+      description: v.description || "",
+      requirements: v.requirements || "",
+      isActive: v.isActive ?? true,
+    });
+    setActiveModal("editVacancy");
+  };
+
+  const handleUpdateVacancy = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const res = await fetch(buildApiUrl("/api/admin/careers"), {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(editVacancyForm),
+      });
+      if (res.ok) {
+        setActiveModal(null);
+        setActionMessage("Job vacancy updated successfully.");
+        fetchData();
+      } else {
+        const data = await res.json();
+        alert(data.error || "Failed to update vacancy");
+      }
+    } catch (err: any) {
+      alert("Error: " + err.message);
+    }
+  };
+
+  const handleToggleVacancyActive = async (v: any) => {
+    try {
+      const res = await fetch(buildApiUrl("/api/admin/careers"), {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: v.id, isActive: !v.isActive }),
+      });
+      if (res.ok) {
+        setActionMessage(`Vacancy "${v.title}" status updated to ${!v.isActive ? "ACTIVE" : "CLOSED"}.`);
+        fetchData();
+      }
+    } catch (err: any) {
+      alert("Error updating vacancy status: " + err.message);
+    }
+  };
+
+  const handleDeleteVacancy = async (id: string, title: string) => {
+    if (!confirm(`Are you sure you want to delete vacancy "${title}"?`)) return;
+    try {
+      const res = await fetch(buildApiUrl(`/api/admin/careers?id=${id}`), { method: "DELETE" });
+      if (res.ok) {
+        setActionMessage("Job vacancy deleted.");
+        fetchData();
+      }
+    } catch (err: any) {
+      alert("Error deleting vacancy: " + err.message);
+    }
   };
 
   const handleCreateBlog = async (e: React.FormEvent) => {
@@ -833,6 +973,24 @@ export default function AdminDashboard() {
 
             <button
               onClick={() => {
+                setActiveTab("vacancies");
+                setMobileMenuOpen(false);
+              }}
+              className={`w-full flex items-center justify-between px-3 py-2.5 rounded text-xs font-label-technical uppercase tracking-wider transition-colors ${
+                activeTab === "vacancies"
+                  ? "bg-primary-container text-white font-bold"
+                  : "text-neutral-400 hover:bg-neutral-900 hover:text-white"
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <span className="material-symbols-outlined text-lg">work</span>
+                Job Vacancies
+              </div>
+              <span className="text-neutral-500 text-[10px]">{stats.totalVacancies || vacancies.length}</span>
+            </button>
+
+            <button
+              onClick={() => {
                 setActiveTab("applications");
                 setMobileMenuOpen(false);
               }}
@@ -844,7 +1002,7 @@ export default function AdminDashboard() {
             >
               <div className="flex items-center gap-3">
                 <span className="material-symbols-outlined text-lg">badge</span>
-                Careers & CVs
+                Candidate CVs
               </div>
               <span className="text-neutral-500 text-[10px]">{stats.totalApplications}</span>
             </button>
@@ -932,7 +1090,8 @@ export default function AdminDashboard() {
             {[
               { id: "overview", label: "Overview", icon: "dashboard", count: 0 },
               { id: "inquiries", label: "Inquiries", icon: "mail", count: stats.unreadInquiries },
-              { id: "applications", label: "Careers", icon: "badge", count: stats.totalApplications },
+              { id: "vacancies", label: "Vacancies", icon: "work", count: stats.totalVacancies || vacancies.length },
+              { id: "applications", label: "CVs", icon: "badge", count: stats.totalApplications },
               { id: "blogs", label: "Dispatches", icon: "article", count: stats.totalBlogs },
               { id: "teams", label: "Teams", icon: "groups", count: stats.totalStaff },
               { id: "partners", label: "Partners", icon: "corporate_fare", count: stats.totalPartners || partners.length },
@@ -986,7 +1145,7 @@ export default function AdminDashboard() {
               </div>
 
               {/* Metric Tiles */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div
                   onClick={() => setActiveTab("inquiries")}
                   className="bg-neutral-950 p-6 border border-neutral-800 rounded-sm cursor-pointer hover:border-primary-container transition-colors"
@@ -1004,6 +1163,26 @@ export default function AdminDashboard() {
                   </div>
                   <div className="text-xs text-amber-400 mt-2 font-label-technical">
                     {stats.unreadInquiries} pending review
+                  </div>
+                </div>
+
+                <div
+                  onClick={() => setActiveTab("vacancies")}
+                  className="bg-neutral-950 p-6 border border-neutral-800 rounded-sm cursor-pointer hover:border-primary-container transition-colors"
+                >
+                  <div className="flex justify-between items-start mb-4">
+                    <span className="font-label-technical text-xs text-neutral-400 uppercase">
+                      Job Vacancies
+                    </span>
+                    <span className="material-symbols-outlined text-primary-container text-xl">
+                      work
+                    </span>
+                  </div>
+                  <div className="font-headline-md text-4xl font-extrabold text-white">
+                    {stats.totalVacancies || vacancies.length}
+                  </div>
+                  <div className="text-xs text-emerald-400 mt-2 font-label-technical">
+                    {vacancies.filter((v) => v.isActive).length} active on Careers page
                   </div>
                 </div>
 
@@ -1363,16 +1542,163 @@ export default function AdminDashboard() {
             </div>
           )}
 
+          {/* TAB: JOB VACANCIES / OPPORTUNITIES */}
+          {activeTab === "vacancies" && (
+            <div className="space-y-6 animate-fadeIn">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                  <span className="text-xs font-label-technical uppercase tracking-widest text-primary font-bold block mb-1">
+                    Careers &amp; Recruitment
+                  </span>
+                  <h1 className="font-headline-md text-2xl sm:text-3xl font-bold text-white">
+                    Job Vacancies &amp; Opportunities
+                  </h1>
+                  <p className="text-xs text-neutral-400 mt-1">
+                    Manage positions published under &quot;Opportunities / Current Vacancies&quot; on the public Careers portal.
+                  </p>
+                </div>
+                <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                  <button
+                    onClick={() => setActiveModal("addVacancy")}
+                    className="bg-primary-container text-white px-4 py-2 text-xs font-label-technical uppercase tracking-wider rounded flex items-center gap-1.5 hover:brightness-110 self-start sm:self-auto shrink-0 shadow-lg"
+                  >
+                    <span className="material-symbols-outlined text-sm">add</span>
+                    Post New Vacancy
+                  </button>
+                  <button
+                    onClick={() => setActiveTab("applications")}
+                    className="border border-neutral-700 hover:border-neutral-500 text-neutral-300 hover:text-white px-3 py-2 text-xs font-label-technical uppercase tracking-wider rounded flex items-center gap-1.5 self-start sm:self-auto shrink-0 transition-colors"
+                  >
+                    <span className="material-symbols-outlined text-sm">badge</span>
+                    View Received CVs ({stats.totalApplications})
+                  </button>
+                </div>
+              </div>
+
+              {/* Vacancies List */}
+              {vacancies.length === 0 ? (
+                <div className="bg-neutral-950 border border-neutral-800 rounded p-12 text-center">
+                  <span className="material-symbols-outlined text-4xl text-neutral-600 mb-2 block">work_off</span>
+                  <h3 className="text-base font-bold text-white mb-1">No Vacancies Posted</h3>
+                  <p className="text-xs text-neutral-400 mb-4">
+                    Create your first job vacancy to publish it under &quot;Current Vacancies&quot; on the Careers page.
+                  </p>
+                  <button
+                    onClick={() => setActiveModal("addVacancy")}
+                    className="bg-primary-container text-white px-4 py-2 text-xs font-label-technical uppercase rounded inline-flex items-center gap-1.5"
+                  >
+                    <span className="material-symbols-outlined text-sm">add</span>
+                    Post New Vacancy
+                  </button>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {vacancies.map((v) => (
+                    <div
+                      key={v.id}
+                      className="bg-neutral-950 border border-neutral-800 p-6 rounded-sm flex flex-col justify-between hover:border-neutral-700 transition-colors"
+                    >
+                      <div>
+                        <div className="flex items-start justify-between gap-3 mb-3">
+                          <span
+                            className={`text-[10px] font-label-technical uppercase px-2 py-0.5 rounded font-bold ${
+                              v.isActive
+                                ? "bg-green-950 text-green-300 border border-green-700"
+                                : "bg-neutral-800 text-neutral-400 border border-neutral-700"
+                            }`}
+                          >
+                            {v.isActive ? "● Active on Website" : "○ Closed / Draft"}
+                          </span>
+                          <span className="text-[11px] font-label-technical bg-neutral-900 border border-neutral-800 px-2.5 py-1 rounded text-neutral-300 flex items-center gap-1">
+                            <span className="material-symbols-outlined text-xs text-primary">person_search</span>
+                            {v._count?.applications ?? 0} {v._count?.applications === 1 ? "applicant" : "applicants"}
+                          </span>
+                        </div>
+
+                        <h3 className="font-headline-md text-lg font-bold text-white mb-2">
+                          {v.title}
+                        </h3>
+
+                        <div className="flex flex-wrap items-center gap-2 mb-3 font-label-technical text-[11px] text-neutral-400">
+                          <span className="text-primary uppercase font-bold">{v.department}</span>
+                          <span>•</span>
+                          <span>{v.location || "Lagos / Offshore"}</span>
+                          <span>•</span>
+                          <span>{v.employmentType || "Full-Time"}</span>
+                          {v.workType && (
+                            <>
+                              <span>•</span>
+                              <span>{v.workType}</span>
+                            </>
+                          )}
+                        </div>
+
+                        <p className="text-xs text-neutral-300 line-clamp-3 mb-3 leading-relaxed">
+                          {v.description}
+                        </p>
+
+                        {v.requirements && (
+                          <div className="p-2.5 bg-neutral-900/60 border border-neutral-800/80 rounded mb-4 text-[11px] text-neutral-400 line-clamp-2">
+                            <strong className="text-neutral-200">Requirements:</strong> {v.requirements}
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="pt-3 border-t border-neutral-800 flex flex-wrap justify-between items-center gap-2 text-xs">
+                        <button
+                          type="button"
+                          onClick={() => handleToggleVacancyActive(v)}
+                          className={`font-label-technical uppercase tracking-wider text-[11px] transition-colors ${
+                            v.isActive ? "text-amber-400 hover:underline" : "text-emerald-400 hover:underline"
+                          }`}
+                        >
+                          {v.isActive ? "Deactivate Role" : "Activate Role"}
+                        </button>
+
+                        <div className="flex items-center gap-3">
+                          <button
+                            type="button"
+                            onClick={() => handleOpenEditVacancy(v)}
+                            className="text-primary hover:underline flex items-center gap-1 font-label-technical uppercase tracking-wider text-[11px]"
+                          >
+                            <span className="material-symbols-outlined text-xs">edit</span>
+                            Edit
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteVacancy(v.id, v.title)}
+                            className="text-red-400 hover:underline font-label-technical uppercase tracking-wider text-[11px]"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
           {/* TAB 3: APPLICATIONS */}
           {activeTab === "applications" && (
             <div className="space-y-6 animate-fadeIn">
-              <div>
-                <h1 className="font-headline-md text-2xl sm:text-3xl font-bold text-white">
-                  Job Applications
-                </h1>
-                <p className="text-xs text-neutral-400 mt-1">
-                  Candidate resumes and applicant profiles submitted via the Careers portal.
-                </p>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                  <h1 className="font-headline-md text-2xl sm:text-3xl font-bold text-white">
+                    Candidate Applications &amp; CVs
+                  </h1>
+                  <p className="text-xs text-neutral-400 mt-1">
+                    Candidate resumes and applicant profiles submitted via the public Careers portal.
+                  </p>
+                </div>
+                <button
+                  onClick={() => setActiveTab("vacancies")}
+                  className="border border-neutral-700 hover:border-neutral-500 text-neutral-300 hover:text-white px-3 py-1.5 text-xs font-label-technical uppercase tracking-wider rounded flex items-center gap-1.5 self-start sm:self-auto shrink-0 transition-colors"
+                >
+                  <span className="material-symbols-outlined text-sm">work</span>
+                  Manage Job Vacancies ({vacancies.length})
+                </button>
               </div>
 
               <div className="bg-neutral-950 border border-neutral-800 rounded overflow-hidden">
@@ -2150,6 +2476,296 @@ export default function AdminDashboard() {
                 className="w-full bg-primary-container text-white py-3 rounded font-label-technical uppercase tracking-wider hover:brightness-110"
               >
                 Update Article
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL: ADD JOB VACANCY */}
+      {activeModal === "addVacancy" && (
+        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+          <div className="bg-neutral-900 border border-neutral-700 w-full max-w-xl p-4 sm:p-6 rounded shadow-2xl animate-scaleUp max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center mb-4">
+              <div>
+                <span className="text-xs font-label-technical uppercase tracking-wider text-primary font-bold block mb-0.5">
+                  Careers Portal
+                </span>
+                <h3 className="font-headline-md text-xl font-bold text-white">Post New Job Vacancy</h3>
+              </div>
+              <button
+                onClick={() => setActiveModal(null)}
+                className="text-neutral-400 hover:text-white"
+              >
+                ✕
+              </button>
+            </div>
+
+            <form onSubmit={handleCreateVacancy} className="space-y-4 text-xs">
+              <div>
+                <label className="block text-neutral-300 font-label-technical uppercase mb-1">
+                  Job Title *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={vacancyForm.title}
+                  onChange={(e) => setVacancyForm({ ...vacancyForm, title: e.target.value })}
+                  placeholder="e.g. Lead Reservoir Engineer"
+                  className="w-full bg-neutral-950 border border-neutral-700 p-2.5 rounded text-white outline-none focus:border-primary"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-neutral-300 font-label-technical uppercase mb-1">
+                    Department *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={vacancyForm.department}
+                    onChange={(e) => setVacancyForm({ ...vacancyForm, department: e.target.value })}
+                    placeholder="e.g. Subsurface & Geosciences"
+                    className="w-full bg-neutral-950 border border-neutral-700 p-2.5 rounded text-white outline-none focus:border-primary"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-neutral-300 font-label-technical uppercase mb-1">
+                    Work Location
+                  </label>
+                  <input
+                    type="text"
+                    value={vacancyForm.location}
+                    onChange={(e) => setVacancyForm({ ...vacancyForm, location: e.target.value })}
+                    placeholder="e.g. Lagos / Offshore Akwa Ibom"
+                    className="w-full bg-neutral-950 border border-neutral-700 p-2.5 rounded text-white outline-none focus:border-primary"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-neutral-300 font-label-technical uppercase mb-1">
+                    Employment Type
+                  </label>
+                  <select
+                    value={vacancyForm.employmentType}
+                    onChange={(e) => setVacancyForm({ ...vacancyForm, employmentType: e.target.value })}
+                    className="w-full bg-neutral-950 border border-neutral-700 p-2.5 rounded text-white outline-none focus:border-primary"
+                  >
+                    <option value="Full-Time">Full-Time</option>
+                    <option value="Contract">Contract</option>
+                    <option value="Rotational">Rotational</option>
+                    <option value="Part-Time">Part-Time</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-neutral-300 font-label-technical uppercase mb-1">
+                    Work Model / Rotation
+                  </label>
+                  <input
+                    type="text"
+                    value={vacancyForm.workType}
+                    onChange={(e) => setVacancyForm({ ...vacancyForm, workType: e.target.value })}
+                    placeholder="e.g. Hybrid / Offshore Rotation"
+                    className="w-full bg-neutral-950 border border-neutral-700 p-2.5 rounded text-white outline-none focus:border-primary"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-neutral-300 font-label-technical uppercase mb-1">
+                  Role Description &amp; Scope *
+                </label>
+                <textarea
+                  required
+                  rows={4}
+                  value={vacancyForm.description}
+                  onChange={(e) => setVacancyForm({ ...vacancyForm, description: e.target.value })}
+                  placeholder="Detail dynamic reservoir simulation, casing design, supervisory duties..."
+                  className="w-full bg-neutral-950 border border-neutral-700 p-2.5 rounded text-white outline-none focus:border-primary"
+                />
+              </div>
+
+              <div>
+                <label className="block text-neutral-300 font-label-technical uppercase mb-1">
+                  Requirements &amp; Certifications *
+                </label>
+                <textarea
+                  required
+                  rows={3}
+                  value={vacancyForm.requirements}
+                  onChange={(e) => setVacancyForm({ ...vacancyForm, requirements: e.target.value })}
+                  placeholder="e.g. Minimum 10 years experience in clastic reservoirs, B.Sc./M.Sc., IWCF certified..."
+                  className="w-full bg-neutral-950 border border-neutral-700 p-2.5 rounded text-white outline-none focus:border-primary"
+                />
+              </div>
+
+              <div className="flex items-center gap-2 pt-1">
+                <input
+                  type="checkbox"
+                  id="vac-active"
+                  checked={vacancyForm.isActive}
+                  onChange={(e) => setVacancyForm({ ...vacancyForm, isActive: e.target.checked })}
+                />
+                <label htmlFor="vac-active" className="text-neutral-300 font-label-technical uppercase cursor-pointer">
+                  Publish Immediately as Active Vacancy on Careers Page
+                </label>
+              </div>
+
+              <button
+                type="submit"
+                className="w-full bg-primary-container text-white py-3 rounded font-label-technical uppercase tracking-wider hover:brightness-110 shadow-lg"
+              >
+                Publish Job Vacancy
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL: EDIT JOB VACANCY */}
+      {activeModal === "editVacancy" && (
+        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+          <div className="bg-neutral-900 border border-neutral-700 w-full max-w-xl p-4 sm:p-6 rounded shadow-2xl animate-scaleUp max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center mb-4">
+              <div>
+                <span className="text-xs font-label-technical uppercase tracking-wider text-primary font-bold block mb-0.5">
+                  Careers Portal
+                </span>
+                <h3 className="font-headline-md text-xl font-bold text-white">Edit Job Vacancy</h3>
+              </div>
+              <button
+                onClick={() => setActiveModal(null)}
+                className="text-neutral-400 hover:text-white"
+              >
+                ✕
+              </button>
+            </div>
+
+            <form onSubmit={handleUpdateVacancy} className="space-y-4 text-xs">
+              <div>
+                <label className="block text-neutral-300 font-label-technical uppercase mb-1">
+                  Job Title *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={editVacancyForm.title}
+                  onChange={(e) => setEditVacancyForm({ ...editVacancyForm, title: e.target.value })}
+                  placeholder="e.g. Lead Reservoir Engineer"
+                  className="w-full bg-neutral-950 border border-neutral-700 p-2.5 rounded text-white outline-none focus:border-primary"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-neutral-300 font-label-technical uppercase mb-1">
+                    Department *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={editVacancyForm.department}
+                    onChange={(e) => setEditVacancyForm({ ...editVacancyForm, department: e.target.value })}
+                    placeholder="e.g. Subsurface & Geosciences"
+                    className="w-full bg-neutral-950 border border-neutral-700 p-2.5 rounded text-white outline-none focus:border-primary"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-neutral-300 font-label-technical uppercase mb-1">
+                    Work Location
+                  </label>
+                  <input
+                    type="text"
+                    value={editVacancyForm.location}
+                    onChange={(e) => setEditVacancyForm({ ...editVacancyForm, location: e.target.value })}
+                    placeholder="e.g. Lagos / Offshore Akwa Ibom"
+                    className="w-full bg-neutral-950 border border-neutral-700 p-2.5 rounded text-white outline-none focus:border-primary"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-neutral-300 font-label-technical uppercase mb-1">
+                    Employment Type
+                  </label>
+                  <select
+                    value={editVacancyForm.employmentType}
+                    onChange={(e) => setEditVacancyForm({ ...editVacancyForm, employmentType: e.target.value })}
+                    className="w-full bg-neutral-950 border border-neutral-700 p-2.5 rounded text-white outline-none focus:border-primary"
+                  >
+                    <option value="Full-Time">Full-Time</option>
+                    <option value="Contract">Contract</option>
+                    <option value="Rotational">Rotational</option>
+                    <option value="Part-Time">Part-Time</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-neutral-300 font-label-technical uppercase mb-1">
+                    Work Model / Rotation
+                  </label>
+                  <input
+                    type="text"
+                    value={editVacancyForm.workType}
+                    onChange={(e) => setEditVacancyForm({ ...editVacancyForm, workType: e.target.value })}
+                    placeholder="e.g. Hybrid / Offshore Rotation"
+                    className="w-full bg-neutral-950 border border-neutral-700 p-2.5 rounded text-white outline-none focus:border-primary"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-neutral-300 font-label-technical uppercase mb-1">
+                  Role Description &amp; Scope *
+                </label>
+                <textarea
+                  required
+                  rows={4}
+                  value={editVacancyForm.description}
+                  onChange={(e) => setEditVacancyForm({ ...editVacancyForm, description: e.target.value })}
+                  placeholder="Detail dynamic reservoir simulation, casing design, supervisory duties..."
+                  className="w-full bg-neutral-950 border border-neutral-700 p-2.5 rounded text-white outline-none focus:border-primary"
+                />
+              </div>
+
+              <div>
+                <label className="block text-neutral-300 font-label-technical uppercase mb-1">
+                  Requirements &amp; Certifications *
+                </label>
+                <textarea
+                  required
+                  rows={3}
+                  value={editVacancyForm.requirements}
+                  onChange={(e) => setEditVacancyForm({ ...editVacancyForm, requirements: e.target.value })}
+                  placeholder="e.g. Minimum 10 years experience in clastic reservoirs, B.Sc./M.Sc., IWCF certified..."
+                  className="w-full bg-neutral-950 border border-neutral-700 p-2.5 rounded text-white outline-none focus:border-primary"
+                />
+              </div>
+
+              <div className="flex items-center gap-2 pt-1">
+                <input
+                  type="checkbox"
+                  id="edit-vac-active"
+                  checked={editVacancyForm.isActive}
+                  onChange={(e) => setEditVacancyForm({ ...editVacancyForm, isActive: e.target.checked })}
+                />
+                <label htmlFor="edit-vac-active" className="text-neutral-300 font-label-technical uppercase cursor-pointer">
+                  Active (Published on Careers Portal)
+                </label>
+              </div>
+
+              <button
+                type="submit"
+                className="w-full bg-primary-container text-white py-3 rounded font-label-technical uppercase tracking-wider hover:brightness-110 shadow-lg"
+              >
+                Save Vacancy Updates
               </button>
             </form>
           </div>

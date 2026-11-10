@@ -3,13 +3,14 @@ import { prisma } from "@/lib/prisma";
 
 export async function GET() {
   try {
-    const [inquiriesCount, unreadInquiries, applicationsCount, blogsCount, staffCount] =
+    const [inquiriesCount, unreadInquiries, applicationsCount, blogsCount, staffCount, vacanciesCount] =
       await Promise.all([
         prisma.contactInquiry.count(),
         prisma.contactInquiry.count({ where: { isRead: false } }),
         prisma.jobApplication.count(),
         prisma.blog.count(),
         prisma.staff.count(),
+        prisma.career.count({ where: { isActive: true } }),
       ]);
 
     const recentInquiries = await prisma.contactInquiry.findMany({
@@ -38,6 +39,7 @@ export async function GET() {
         totalInquiries: inquiriesCount,
         unreadInquiries,
         totalApplications: applicationsCount,
+        totalVacancies: vacanciesCount,
         totalBlogs: blogsCount,
         totalStaff: staffCount,
       },

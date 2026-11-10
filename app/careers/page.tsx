@@ -1,13 +1,62 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { buildApiUrl } from "@/lib/api-config";
 import { getCloudinaryUrl, SECTION_ASSETS } from "@/lib/cloudinary";
 
+const DEFAULT_ROLES = [
+  {
+    id: "car-01",
+    slug: "lead-reservoir-engineer",
+    title: "Lead Reservoir Engineer",
+    department: "Subsurface & Geosciences",
+    location: "Lagos / Offshore Akwa Ibom",
+    employmentType: "Full-Time",
+    workType: "Hybrid / Offshore Rotation",
+    description: "Lead dynamic reservoir simulation (Eclipse/Petrel), material balance modeling, pressure transient analysis (PTA), and depletion planning for PPL 244 and PPL 227.",
+    requirements: "Minimum 10 years experience in clastic offshore reservoirs, B.Sc./M.Sc. in Petroleum Engineering, deep proficiency in Petrel & Eclipse.",
+  },
+  {
+    id: "car-02",
+    slug: "senior-drilling-operations-specialist",
+    title: "Senior Drilling & Well Operations Specialist",
+    department: "Drilling & Well Completion",
+    location: "Port Harcourt / Marine Base",
+    employmentType: "Full-Time",
+    workType: "Rotational (28/28)",
+    description: "Supervise offshore drilling contractor operations, casing seat design, high-angle directional drilling, mud logging verification, and well control integrity.",
+    requirements: "IWCF Level 4 Supervisor certification required. 12+ years experience in shallow-water jack-up drilling campaigns.",
+  },
+  {
+    id: "car-03",
+    slug: "qhse-offshore-compliance-lead",
+    title: "Lead QHSE & Regulatory Compliance Officer",
+    department: "Health, Safety & Environment",
+    location: "Offshore PPL 244 / Field Operations",
+    employmentType: "Full-Time",
+    workType: "Rotational (14/14)",
+    description: "Champion Zero-Harm culture across offshore installation. Conduct audits, maintain safety case documentation for NUPRC, and lead risk assessments.",
+    requirements: "NEBOSH Diploma or equivalent, minimum 8 years in upstream oil and gas safety systems management.",
+  },
+  {
+    id: "car-04",
+    slug: "subsea-pipeline-integrity-engineer",
+    title: "Subsea Pipeline Integrity Engineer",
+    department: "Asset Integrity & Subsea",
+    location: "Lagos / Site Visits",
+    employmentType: "Full-Time",
+    workType: "Hybrid",
+    description: "Manage pipeline CP surveys, inline inspection (ILI) data evaluation, riser integrity, and seabed survey analysis for shallow-water export lines.",
+    requirements: "B.Sc. Mechanical or Marine Engineering, 7+ years in subsea piping and cathodic protection systems.",
+  },
+];
+
 export default function CareersPage() {
+  const [roles, setRoles] = useState<any[]>(DEFAULT_ROLES);
+  const [loadingRoles, setLoadingRoles] = useState(true);
   const [selectedJob, setSelectedJob] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     firstName: "",
@@ -22,52 +71,24 @@ export default function CareersPage() {
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const roles = [
-    {
-      id: "car-01",
-      slug: "lead-reservoir-engineer",
-      title: "Lead Reservoir Engineer",
-      department: "Subsurface & Geosciences",
-      location: "Lagos / Offshore Akwa Ibom",
-      employmentType: "Full-Time",
-      workType: "Hybrid / Offshore Rotation",
-      desc: "Lead dynamic reservoir simulation (Eclipse/Petrel), material balance modeling, pressure transient analysis (PTA), and depletion planning for PPL 244 and PPL 227.",
-      requirements: "Minimum 10 years experience in clastic offshore reservoirs, B.Sc./M.Sc. in Petroleum Engineering, deep proficiency in Petrel & Eclipse.",
-    },
-    {
-      id: "car-02",
-      slug: "senior-drilling-operations-specialist",
-      title: "Senior Drilling & Well Operations Specialist",
-      department: "Drilling & Well Completion",
-      location: "Port Harcourt / Marine Base",
-      employmentType: "Full-Time",
-      workType: "Rotational (28/28)",
-      desc: "Supervise offshore drilling contractor operations, casing seat design, high-angle directional drilling, mud logging verification, and well control integrity.",
-      requirements: "IWCF Level 4 Supervisor certification required. 12+ years experience in shallow-water jack-up drilling campaigns.",
-    },
-    {
-      id: "car-03",
-      slug: "qhse-offshore-compliance-lead",
-      title: "Lead QHSE & Regulatory Compliance Officer",
-      department: "Health, Safety & Environment",
-      location: "Offshore PPL 244 / Field Operations",
-      employmentType: "Full-Time",
-      workType: "Rotational (14/14)",
-      desc: "Champion Zero-Harm culture across offshore installation. Conduct audits, maintain safety case documentation for NUPRC, and lead risk assessments.",
-      requirements: "NEBOSH Diploma or equivalent, minimum 8 years in upstream oil and gas safety systems management.",
-    },
-    {
-      id: "car-04",
-      slug: "subsea-pipeline-integrity-engineer",
-      title: "Subsea Pipeline Integrity Engineer",
-      department: "Asset Integrity & Subsea",
-      location: "Lagos / Site Visits",
-      employmentType: "Full-Time",
-      workType: "Hybrid",
-      desc: "Manage pipeline CP surveys, inline inspection (ILI) data evaluation, riser integrity, and seabed survey analysis for shallow-water export lines.",
-      requirements: "B.Sc. Mechanical or Marine Engineering, 7+ years in subsea piping and cathodic protection systems.",
-    },
-  ];
+  useEffect(() => {
+    async function loadVacancies() {
+      try {
+        const res = await fetch(buildApiUrl("/api/careers"));
+        if (res.ok) {
+          const data = await res.json();
+          if (data.vacancies && data.vacancies.length > 0) {
+            setRoles(data.vacancies);
+          }
+        }
+      } catch (err) {
+        console.error("Failed to load vacancies from server:", err);
+      } finally {
+        setLoadingRoles(false);
+      }
+    }
+    loadVacancies();
+  }, []);
 
   const handleApply = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -209,7 +230,7 @@ export default function CareersPage() {
               </h2>
             </div>
             <span className="font-label-technical text-[11px] sm:text-xs text-surface-variant uppercase tracking-wider font-semibold">
-              04 POSITIONS POSTED
+              {roles.length < 10 ? `0${roles.length}` : roles.length} {roles.length === 1 ? "POSITION POSTED" : "POSITIONS POSTED"}
             </span>
           </div>
 
@@ -223,19 +244,27 @@ export default function CareersPage() {
                   <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-2 font-label-technical text-[11px] sm:text-xs">
                     <span className="text-primary-container font-bold uppercase">{role.department}</span>
                     <span>•</span>
-                    <span className="text-surface-variant uppercase">{role.location}</span>
+                    <span className="text-surface-variant uppercase">{role.location || "Lagos / Offshore"}</span>
                     <span>•</span>
-                    <span className="text-surface-variant uppercase">{role.employmentType}</span>
+                    <span className="text-surface-variant uppercase">{role.employmentType || "Full-Time"}</span>
+                    {role.workType && (
+                      <>
+                        <span>•</span>
+                        <span className="text-surface-variant uppercase">{role.workType}</span>
+                      </>
+                    )}
                   </div>
                   <h3 className="font-headline-md text-xl sm:text-2xl font-bold text-pure-black mb-2 sm:mb-3">
                     {role.title}
                   </h3>
                   <p className="font-body-md text-surface-variant text-xs sm:text-sm mb-3 leading-relaxed">
-                    {role.desc}
+                    {role.description || role.desc}
                   </p>
-                  <p className="font-label-technical text-xs text-pure-black/70">
-                    <strong className="text-pure-black">Requirements:</strong> {role.requirements}
-                  </p>
+                  {role.requirements && (
+                    <p className="font-label-technical text-xs text-pure-black/70">
+                      <strong className="text-pure-black">Requirements:</strong> {role.requirements}
+                    </p>
+                  )}
                 </div>
 
                 <div className="flex-shrink-0 w-full sm:w-auto">
