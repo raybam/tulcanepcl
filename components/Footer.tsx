@@ -125,7 +125,7 @@ export default function Footer() {
               </p>
               <p>
                 <strong className="text-pure-white block">Phone:</strong>
-                +234 1 234 5678 / +234 803 000 0000
+                +234 (020) 1454 4590
               </p>
               <div className="pt-2">
                 <Link
