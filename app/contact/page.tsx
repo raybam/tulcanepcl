@@ -120,7 +120,7 @@ export default function ContactPage() {
                         Head Office
                       </h3>
                       <p className="font-body-md text-pure-black text-xs sm:text-sm leading-relaxed">
-                        Plot 1673, Olakunle Bakare Close,<br />
+                        Gaderick Building, 100 Adetokunbo Ademola Street,<br />
                         Victoria Island, Lagos, Nigeria.
                       </p>
                     </div>
@@ -136,8 +136,8 @@ export default function ContactPage() {
                         Operational & Field Bases
                       </h3>
                       <p className="font-body-md text-pure-black text-xs sm:text-sm leading-relaxed">
-                        Port Harcourt Marine Supply Base, Rivers State.<br />
-                        Warri Swamp Base & Logistics Yard, Delta State.
+                        Tom Shot Bank Field, Calabar River in Akwa Ibom State.<br />
+                        Odimodi Field, Delta State.
                       </p>
                     </div>
                   </div>
@@ -170,10 +170,10 @@ export default function ContactPage() {
                           Direct Line
                         </h4>
                         <a
-                          href="tel:+23412345678"
+                          href="tel:+2342014544590"
                           className="font-body-md text-xs sm:text-sm text-pure-black hover:text-primary-container transition-colors font-medium"
                         >
-                          +234 1 234 5678
+                          +234 (20) 1454 4590
                         </a>
                       </div>
                     </div>
