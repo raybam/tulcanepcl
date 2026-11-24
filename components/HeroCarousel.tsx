@@ -132,8 +132,7 @@ export default function HeroCarousel() {
       <div className="relative z-10 w-full px-4 sm:px-8 xl:px-container-margin grid grid-cols-12 gap-grid-gutter my-auto">
         <div className="col-span-12 md:col-span-10 lg:col-span-8 flex flex-col gap-4 sm:gap-5">
           {/* Badge */}
-          <div className="flex items-center gap-3 font-label-technical text-xs text-primary uppercase tracking-widest">
-            <span className="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
+          <div className="flex items-center font-label-technical text-xs text-primary uppercase tracking-widest">
             <span>{slides[current].badge}</span>
           </div>
 
